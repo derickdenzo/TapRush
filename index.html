@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#100d20">
+  <title>TapRush — Tap. Collect. Rise.</title>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#100d20;--panel:#1c1730;--panel2:#251d3d;--muted:#aaa2c3;--purple:#8b5cf6;--pink:#e879f9;--gold:#ffd36a;--green:#65e6ad}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 50% -10%,#38215f 0,#17112b 38%,var(--bg) 75%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+    .wrap{max-width:480px;margin:auto;padding:18px 16px 32px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .brand{font-weight:900;font-size:21px;letter-spacing:.4px}.brand span{color:var(--pink)}.pill{font-size:11px;color:#cfc4ef;border:1px solid #51416f;border-radius:99px;padding:7px 10px;background:#211936}
+    .balance{background:linear-gradient(135deg,#30204f,#1c1730);border:1px solid #554078;border-radius:22px;padding:18px;text-align:center;box-shadow:0 16px 45px #08061166}
+    .eyebrow{color:var(--muted);font-size:11px;letter-spacing:1.5px;font-weight:800}.points{font-size:38px;font-weight:900;letter-spacing:-1.5px;margin:5px 0}.points small{font-size:13px;color:var(--gold);letter-spacing:1px}
+    .sub{font-size:12px;color:var(--muted)}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+    .stat,.card{background:#1b1630;border:1px solid #34284d;border-radius:17px;padding:14px}.stat label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.stat strong{font-size:18px}
+    .tap-area{display:flex;flex-direction:column;align-items:center;padding:18px 0 14px}.coin{width:190px;height:190px;border-radius:50%;border:0;cursor:pointer;color:#3b2255;background:radial-gradient(circle at 35% 28%,#fff2bd 0,#ffd66f 35%,#f5a623 70%,#c46a16 100%);box-shadow:0 0 0 10px #ffd36a14,0 0 45px #f6b94266,inset 0 5px 10px #fff8;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform .08s;touch-action:manipulation}
+    .coin:active{transform:scale(.94)}.coin .symbol{font-size:75px;line-height:1}.coin b{font-size:12px;letter-spacing:2px;margin-top:6px}.tap-hint{color:var(--muted);font-size:12px;margin-top:15px}
+    .energy{width:100%;margin-top:14px}.energyline{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:7px}.bar{height:8px;background:#342b49;border-radius:99px;overflow:hidden}.fill{height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#e879f9);border-radius:99px;transition:width .2s}
+    .section-title{font-size:15px;font-weight:800;margin:18px 2px 10px}.daily{display:flex;align-items:center;gap:12px}.gift{font-size:27px;background:#302349;border-radius:13px;width:48px;height:48px;display:grid;place-items:center}.daily-copy{flex:1}.daily-copy b{display:block;font-size:14px}.daily-copy small{color:var(--muted);font-size:11px}.reward{color:var(--gold);font-weight:900;font-size:13px;white-space:nowrap}
+    .button{border:0;border-radius:12px;padding:13px 14px;font-weight:850;color:#fff;background:linear-gradient(100deg,#7848df,#b14fe0);cursor:pointer;width:100%;margin-top:12px;font-size:13px}.button:disabled{opacity:.45;cursor:not-allowed}.note{font-size:10px;color:var(--muted);line-height:1.5;margin-top:9px}
+    .mission{display:flex;align-items:center;justify-content:space-between;gap:10px}.mission strong{font-size:13px}.mission small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.tag{font-size:11px;color:var(--gold);font-weight:800;white-space:nowrap}
+    .footer{text-align:center;color:#776e91;font-size:10px;margin:20px 0 0;line-height:1.6}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#30234a;border:1px solid #6d5395;color:#fff;padding:11px 16px;border-radius:99px;font-size:12px;opacity:0;transition:.2s;pointer-events:none;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:360px){.coin{width:166px;height:166px}.points{font-size:32px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand">TAP<span>RUSH</span></div><div class="pill" id="mode">BROWSER PREVIEW</div></header>
+  <section class="balance">
+    <div class="eyebrow">YOUR TOTAL POINTS</div>
+    <div class="points"><span id="points">0</span> <small>PTS</small></div>
+    <div class="sub">Collect points • Build your streak • Climb the ranks</div>
+  </section>
+  <div class="stats">
+    <div class="stat"><label>⚡ ENERGY</label><strong id="energyStat">500 / 500</strong></div>
+    <div class="stat"><label>🔥 DAILY STREAK</label><strong id="streak">0 days</strong></div>
+  </div>
+  <section class="tap-area">
+    <button class="coin" id="tap" aria-label="Tap to collect one point"><span class="symbol">₿</span><b>TAP TO MINE</b></button>
+    <div class="tap-hint">Tap the coin to collect +1 point</div>
+    <div class="energy">
+      <div class="energyline"><span>ENERGY</span><span id="energyText">500 / 500</span></div>
+      <div class="bar"><div class="fill" id="energyFill"></div></div>
+    </div>
+  </section>
+  <div class="section-title">🎁 Daily check-in</div>
+  <section class="card">
+    <div class="daily">
+      <div class="gift">🎁</div>
+      <div class="daily-copy"><b id="dailyTitle">Claim today's reward</b><small id="dailyDesc">Watch a rewarded ad to unlock your daily points.</small></div>
+      <div class="reward">+500 PTS</div>
+    </div>
+    <button class="button" id="dailyBtn">▶ WATCH AD & CLAIM</button>
+    <div class="note">Daily reward is issued only after Adsgram confirms a completed rewarded ad. If no ad is available, you can try again later. No points are deducted.</div>
+  </section>
+  <div class="section-title">🎯 Daily mission</div>
+  <section class="card mission">
+    <div><strong>Tap 100 times</strong><small id="missionProgress">Progress: 0 / 100</small></div><div class="tag">+1,000 PTS</div>
+  </section>
+  <div class="footer">TapRush is a points-based game prototype. Points have no cash value and do not guarantee an airdrop or token allocation.<br>Prototype balances are stored on this device only.</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const STORE = "taprush_prototype_v1";
+  const MAX_ENERGY = 500;
+  const REGEN_PER_MIN = 10;
+  // Add your real AdsGram Reward block ID after publisher approval.
+  // Never use a production reward block ID for local testing.
+  const ADSGRAM_BLOCK_ID = "PASTE_YOUR_ADSGRAM_REWARD_BLOCK_ID";
+  const tg = window.Telegram?.WebApp;
+  if (tg?.initData) { tg.ready(); tg.expand(); $("mode").textContent = "TELEGRAM MINI APP"; }
+
+  const today = () => new Date().toISOString().slice(0,10);
+  const yesterday = () => { const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); };
+  const fresh = () => ({points:0,energy:MAX_ENERGY,lastEnergyAt:Date.now(),lastDaily:null,streak:0,tapsToday:0,missionDay:today(),missionClaimed:false});
+  let state;
+  try { state = {...fresh(), ...JSON.parse(localStorage.getItem(STORE) || "{}")}; } catch { state=fresh(); }
+  function save(){ localStorage.setItem(STORE,JSON.stringify(state)); }
+  function regen(){
+    const now=Date.now(), elapsed=Math.max(0,now-(state.lastEnergyAt||now));
+    state.energy=Math.min(MAX_ENERGY,state.energy+Math.floor(elapsed/6000));
+    state.lastEnergyAt=now; save();
+  }
+  function render(){
+    regen();
+    $("points").textContent=state.points.toLocaleString();
+    $("energyStat").textContent=`${state.energy} / ${MAX_ENERGY}`;
+    $("energyText").textContent=`${state.energy} / ${MAX_ENERGY}`;
+    $("energyFill").style.width=(state.energy/MAX_ENERGY*100)+"%";
+    $("streak").textContent=state.streak+" days";
+    $("missionProgress").textContent=`Progress: ${state.tapsToday} / 100`;
+    const claimed=state.lastDaily===today();
+    $("dailyTitle").textContent=claimed?"Today's reward claimed":"Claim today's reward";
+    $("dailyDesc").textContent=claimed?"Come back tomorrow for your next check-in.":"Watch a rewarded ad to unlock your daily points.";
+    $("dailyBtn").disabled=claimed;
+    $("dailyBtn").textContent=claimed?"✓ CLAIMED TODAY":"▶ WATCH AD & CLAIM";
+    $("tap").disabled=state.energy<=0;
+  }
+  let toastTimer;
+  function toast(message){const el=$("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2600);}
+  $("tap").addEventListener("click",()=>{
+    regen(); if(state.energy<=0){toast("Energy depleted. It recharges over time.");return;}
+    state.points+=1;state.energy-=1;
+    if(state.missionDay!==today()){state.missionDay=today();state.tapsToday=0;state.missionClaimed=false;}
+    state.tapsToday++;
+    if(state.tapsToday>=100&&!state.missionClaimed){state.points+=1000;state.missionClaimed=true;toast("Mission completed! +1,000 points");}
+    save();render();
+  });
+  async function showRewardedAd(){
+    if(!ADSGRAM_BLOCK_ID || ADSGRAM_BLOCK_ID.includes("PASTE_")){
+      toast("Ads aren't connected yet. Add your approved AdsGram block ID first.");return false;
+    }
+    if(!window.Adsgram?.init){toast("Adsgram SDK did not load. Check your connection and try again.");return false;}
+    try{
+      const controller=window.Adsgram.init({blockId:ADSGRAM_BLOCK_ID});
+      const result=await controller.show();
+      return result?.done===true && result?.error!==true;
+    }catch(err){return false;}
+  }
+  $("dailyBtn").addEventListener("click",async()=>{
+    if(state.lastDaily===today()){toast("You've already claimed today's reward.");return;}
+    $("dailyBtn").disabled=true;$("dailyBtn").textContent="LOADING AD…";
+    const completed=await showRewardedAd();
+    if(completed){
+      // Prototype-only local credit. Production rewards must be granted by a backend
+      // after validating Telegram initData and enforcing one claim per user/day.
+      const previous=state.lastDaily;
+      state.streak=(previous===yesterday())?state.streak+1:1;
+      state.lastDaily=today();state.points+=500;save();toast("Reward unlocked: +500 points!");
+    }else{
+      toast("No completed ad. No points were added.");
+    }
+    render();
+  });
+  render();
+  setInterval(render,5000);
+})();
+</script>
+</body>
+</html>

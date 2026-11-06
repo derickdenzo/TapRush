@@ -1,531 +1,518 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#100d20">
 <title>TapRush — Tap. Collect. Rise.</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
 <style>
-:root{color-scheme:dark;--bg:#100d20;--panel:#1c1730;--panel2:#28203e;--line:#3b3054;--muted:#aaa2c3;--purple:#9b72ff;--pink:#e879f9;--gold:#ffd36a;--green:#65e6ad}
+:root{--bg:#100d20;--panel:#1c1731;--panel2:#251d3e;--gold:#ffc857;--purple:#9b78ff;--muted:#aaa2c4;--white:#fff}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 50% -10%,#38215f 0,#17112b 38%,var(--bg) 75%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-button{font:inherit;color:inherit}
-.wrap{max-width:480px;margin:auto;padding:16px 15px 100px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.brand{font-weight:950;font-size:22px;letter-spacing:.3px}
-.brand span{color:var(--pink)}
-.pill{font-size:10px;color:#d6c9f5;border:1px solid #51416f;border-radius:99px;padding:7px 10px;background:#211936}
-.balance,.panel{background:linear-gradient(145deg,#30204f,#1c1730);border:1px solid #554078;border-radius:21px;padding:17px;box-shadow:0 14px 35px #08061155}
-.eyebrow{color:var(--muted);font-size:10px;letter-spacing:1.5px;font-weight:800}
-.points{font-size:39px;font-weight:950;letter-spacing:-1.5px;margin:5px 0}
-.points small{font-size:12px;color:var(--gold);letter-spacing:1px}
-.sub,.muted{font-size:12px;color:var(--muted);line-height:1.5}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-.stat,.tile{background:#1b1630;border:1px solid #34284d;border-radius:16px;padding:13px}
-.stat label{display:block;color:var(--muted);font-size:10px;margin-bottom:6px}
-.stat strong{font-size:17px}
-.tap-area{display:flex;flex-direction:column;align-items:center;padding:13px 0 10px}
-.coin{width:184px;height:184px;border-radius:50%;border:0;cursor:pointer;color:#3b2255;background:radial-gradient(circle at 35% 28%,#fff2bd 0,#ffd66f 35%,#f5a623 70%,#c46a16 100%);box-shadow:0 0 0 10px #ffd36a14,0 0 42px #f6b94266,inset 0 5px 10px #fff8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
-.coin:active{transform:scale(.96)}
-.coin .symbol{font-size:56px;font-weight:950;line-height:1}
-.coin b{font-size:11px;letter-spacing:1px}
-.tap-hint{font-size:12px;color:var(--muted);margin-top:16px}
-.energy{width:100%;max-width:300px;margin-top:17px}
-.energyline{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:7px}
-.bar{height:8px;border-radius:20px;background:#34284d;overflow:hidden}
-.fill{height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#e879f9);border-radius:20px}
-.section-title{font-size:14px;font-weight:850;margin:18px 0 10px}
-.card{background:#1b1630;border:1px solid #34284d;border-radius:17px;padding:14px;margin-bottom:10px}
-.daily{display:flex;align-items:center;gap:10px}
-.gift{font-size:25px}
-.daily-copy{flex:1}
-.daily-copy b,.daily-copy small{display:block}
-.daily-copy b{font-size:13px}
-.daily-copy small{font-size:10px;color:var(--muted);margin-top:4px}
-.reward{font-size:11px;color:var(--gold);font-weight:900;white-space:nowrap}
-.button{width:100%;border:0;border-radius:12px;padding:13px;background:linear-gradient(90deg,#8b5cf6,#c45cf6);font-size:11px;font-weight:900;letter-spacing:.5px;margin-top:13px}
-.button:disabled{opacity:.45}
-.note{font-size:10px;line-height:1.5;color:var(--muted);margin-top:10px}
-.mission-row,.person,.task-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.tag{font-size:10px;color:var(--gold);font-weight:850}
-.page{display:none}
-.page.active{display:block}
-.page-head{font-size:22px;font-weight:950;margin:8px 0 4px}
-.page-intro{font-size:12px;color:var(--muted);margin-bottom:16px}
-.task-row{padding:13px 0;border-bottom:1px solid #332847}
-.task-row:last-child{border:0}
-.task-icon{font-size:22px;width:34px}
-.task-info{flex:1}
-.task-info b,.task-info small{display:block}
-.task-info b{font-size:12px}
-.task-info small{font-size:10px;color:var(--muted);margin-top:4px}
-.small-btn{border:1px solid #7656aa;background:#34244f;color:#fff;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:800}
-.small-btn.done{color:var(--green);border-color:#356b59;background:#18382f}
-.rank-row{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid #332847;font-size:12px}
-.rank-num{width:24px;color:var(--gold);font-weight:900}
-.avatar{width:32px;height:32px;border-radius:50%;background:#49336d;display:grid;place-items:center;font-weight:900}
-.rank-name{flex:1}
-.rank-points{font-weight:850}
-.you{background:#30234b;border-radius:12px;padding:10px;margin-top:8px}
-.ref-box{background:#130f22;border:1px dashed #70559b;border-radius:12px;padding:12px;font-size:11px;word-break:break-all;color:#d9cafa;margin:12px 0}
-.profile-top{display:flex;align-items:center;gap:12px}
-.big-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#9b72ff,#e879f9);display:grid;place-items:center;font-size:23px;font-weight:900}
-.profile-top b,.profile-top small{display:block}
-.profile-top small{color:var(--muted);font-size:11px;margin-top:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
-.tile strong{font-size:18px;display:block;margin-top:5px}
-.tile span{font-size:10px;color:var(--muted)}
-.footer{text-align:center;color:#807696;font-size:9px;line-height:1.5;margin-top:20px}
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#171126ee;border-top:1px solid #3b3054;backdrop-filter:blur(12px);z-index:5}
-.nav button{background:none;border:0;color:#9288aa;font-size:9px;padding:5px 0;display:flex;flex-direction:column;align-items:center;gap:4px}
-.nav button .ico{font-size:18px}
-.nav button.active{color:#e8d9ff}
-.nav button.active .ico{filter:drop-shadow(0 0 7px #b68cff)}
-.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#32264a;border:1px solid #7656aa;padding:11px 15px;border-radius:12px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:10;max-width:90%;text-align:center}
-.toast.show{opacity:1}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif;padding-bottom:85px}
+header{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:900;letter-spacing:.5px}.logo span{color:var(--gold)}
+.small{font-size:12px;color:var(--muted)}
+.container{padding:10px 16px;max-width:520px;margin:auto}
+.card{background:var(--panel);border:1px solid #33294e;border-radius:18px;padding:17px;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.label{color:var(--muted);font-size:12px}
+.points{font-size:34px;font-weight:900;color:var(--gold);margin:7px 0}
+.energy{font-weight:bold;color:#9de6bc}
+.bar{height:9px;background:#382e50;border-radius:20px;overflow:hidden;margin-top:9px}
+.bar div{height:100%;background:linear-gradient(90deg,#9b78ff,#ffc857);width:100%;transition:width .2s}
+.tap-area{text-align:center;padding:18px 0 10px}
+.tap-button{width:190px;height:190px;border-radius:50%;border:7px solid #7554c7;background:radial-gradient(circle at 35% 30%,#b79aff,#7048c5 65%,#412879);box-shadow:0 0 35px #7950c866,inset 0 0 18px #ffffff33;color:white;font-size:29px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.tap-button:active{transform:scale(.96)}
+.tap-button:disabled{opacity:.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--panel2);padding:12px 7px;border-radius:13px;text-align:center}
+.stat strong{display:block;font-size:18px;margin-bottom:4px}
+.stat span{font-size:10px;color:var(--muted)}
+.section-title{font-size:17px;font-weight:800;margin:5px 0 13px}
+button{font-family:inherit}
+.action{border:0;border-radius:12px;background:var(--gold);color:#21162c;font-weight:800;padding:13px 16px;cursor:pointer}
+.action.secondary{background:#49376d;color:white}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.full{width:100%}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:9px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #382e50}
+.task:last-child{border:0}
+.task strong{display:block;font-size:14px;margin-bottom:5px}
+.task p{margin:0;font-size:11px;color:var(--muted)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#171229;border-top:1px solid #33294e;display:flex;justify-content:space-around;padding:10px 3px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.nav button{background:none;border:0;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:18%;cursor:pointer}
+.nav button.active{color:var(--gold)}
+.nav b{font-size:19px}
+.page{display:none}.page.active{display:block}
+.leader{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #382e50}
+.leader:last-child{border:0}
+.rank{width:29px;height:29px;border-radius:9px;background:#382e50;display:grid;place-items:center;font-weight:bold;color:var(--gold)}
+.person{flex:1;min-width:0}.person strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+.person span{font-size:11px;color:var(--muted)}
+.score{font-weight:800;color:var(--gold);font-size:13px}
+input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-radius:10px;padding:12px;font-size:12px;margin:9px 0}
+.profile-icon{width:52px;height:52px;border-radius:50%;background:#49376d;display:grid;place-items:center;font-size:23px}
+.empty{text-align:center;color:var(--muted);padding:25px 5px;font-size:13px}
+#toast{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#332653;color:white;padding:11px 17px;border-radius:12px;font-size:13px;display:none;z-index:20;max-width:90%;text-align:center}
 </style>
 </head>
-
 <body>
-<div class="wrap">
 
-<div class="top">
- <div class="brand">TAP<span>RUSH</span> ⚡</div>
- <div class="pill" id="mode">MINI APP</div>
+<div id="toast"></div>
+
+<header>
+  <div>
+    <div class="logo">TAP<span>RUSH</span> ⚡</div>
+    <div class="small">Tap. Collect. Rise.</div>
+  </div>
+  <div class="small" id="connection">Connecting...</div>
+</header>
+
+<div class="container">
+
+  <section class="page active" id="home">
+    <div class="card">
+      <div class="label">YOUR TOTAL POINTS</div>
+      <div class="points" id="points">0</div>
+      <div class="row">
+        <span class="label">⚡ Energy</span>
+        <strong class="energy" id="energy">500 / 500</strong>
+      </div>
+      <div class="bar"><div id="energybar"></div></div>
+      <div class="notice">Energy regenerates automatically over time.</div>
+    </div>
+
+    <div class="tap-area">
+      <button class="tap-button" id="tapButton" disabled>LOADING</button>
+      <p class="small" id="tapStatus">Connecting to TapRush...</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong id="streak">0</strong><span>DAY STREAK 🔥</span></div>
+      <div class="stat"><strong id="taps">0/100</strong><span>DAILY TAPS</span></div>
+      <div class="stat"><strong id="mission">0</strong><span>MISSIONS CLAIMED</span></div>
+    </div>
+
+    <div class="card" style="margin-top:15px">
+      <div class="section-title">Daily check-in 🎁</div>
+      <div class="row">
+        <div><strong>+500 points</strong><div class="notice">Claim once every day.</div></div>
+        <button class="action" id="dailyButton" disabled>Claim</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Daily mission 🎯</div>
+      <div class="row">
+        <div><strong>Complete 100 taps</strong><div class="notice">Earn 1,000 bonus points.</div></div>
+        <strong style="color:var(--gold)">+1,000</strong>
+      </div>
+      <div class="bar"><div id="missionbar"></div></div>
+      <div class="notice" id="missionText">0 of 100 taps completed</div>
+    </div>
+  </section>
+
+  <section class="page" id="tasks">
+    <div class="section-title">Your tasks</div>
+    <div class="card">
+      <div class="task">
+        <div><strong>Daily check-in</strong><p>Claim your daily 500-point reward.</p></div>
+        <button class="action" id="taskDaily">Claim</button>
+      </div>
+      <div class="task">
+        <div><strong>Tap 100 times</strong><p>Complete your daily tapping mission.</p></div>
+        <strong style="color:var(--gold)">+1,000</strong>
+      </div>
+      <div class="task">
+        <div><strong>Invite a friend</strong><p>Earn 2,000 points for a successful referral.</p></div>
+        <button class="action secondary" onclick="showPage('friends')">Invite</button>
+      </div>
+    </div>
+    <p class="notice">Rewards are virtual TapRush points. They are not cash or guaranteed airdrop tokens.</p>
+  </section>
+
+  <section class="page" id="leaderboard">
+    <div class="section-title">🏆 Global leaderboard</div>
+    <div class="card">
+      <div class="row"><strong>Top players</strong><span class="small">Live database rankings</span></div>
+      <div id="leaderList"><div class="empty">Loading leaderboard...</div></div>
+      <button class="action secondary full" style="margin-top:12px" onclick="loadLeaderboard()">Refresh rankings</button>
+    </div>
+  </section>
+
+  <section class="page" id="friends">
+    <div class="section-title">👥 Invite friends</div>
+    <div class="card">
+      <div class="section-title">Your referral link</div>
+      <p class="notice">Share your personal link. When a new player joins through it, you receive 2,000 points.</p>
+      <input id="refLink" readonly value="Loading your referral link...">
+      <button class="action full" onclick="copyReferral()">Copy referral link</button>
+      <button class="action secondary full" style="margin-top:9px" onclick="shareReferral()">Share with friends</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Referral statistics</div>
+      <div class="stats">
+        <div class="stat"><strong id="refTotal">0</strong><span>INVITES</span></div>
+        <div class="stat"><strong id="refSuccess">0</strong><span>SUCCESSFUL</span></div>
+        <div class="stat"><strong id="refPoints">0</strong><span>POINTS EARNED</span></div>
+      </div>
+      <p class="notice">Statistics update when a new player registers through your referral link.</p>
+      <button class="action secondary full" style="margin-top:12px" onclick="loadReferralStats()">Refresh statistics</button>
+    </div>
+  </section>
+
+  <section class="page" id="profile">
+    <div class="card">
+      <div class="row">
+        <div><div class="label">PLAYER PROFILE</div><h2 id="playerName">Player</h2><div class="small" id="playerUsername"></div></div>
+        <div class="profile-icon">⚡</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="task"><span class="label">Total points</span><strong id="profilePoints">0</strong></div>
+      <div class="task"><span class="label">Current energy</span><strong id="profileEnergy">500</strong></div>
+      <div class="task"><span class="label">Daily streak</span><strong id="profileStreak">0</strong></div>
+      <div class="task"><span class="label">Today's taps</span><strong id="profileTaps">0</strong></div>
+    </div>
+    <div class="card">
+      <strong>About TapRush</strong>
+      <p class="notice">TapRush is a points-based mini game. Your player progress is stored on our server so it can be retrieved when you return using your Telegram account.</p>
+      <button class="action secondary full" onclick="refreshAll()">Refresh my account</button>
+    </div>
+  </section>
+
 </div>
 
-<section id="home" class="page active">
- <section class="balance">
-  <div class="eyebrow">YOUR TOTAL POINTS</div>
-  <div class="points"><span id="points">0</span> <small>PTS</small></div>
-  <div class="sub">Tap. Collect. Rise. Build your streak and climb the ranks.</div>
- </section>
-
- <div class="stats">
-  <div class="stat"><label>⚡ ENERGY</label><strong id="energyStat">500 / 500</strong></div>
-  <div class="stat"><label>🔥 DAILY STREAK</label><strong id="streak">0 days</strong></div>
- </div>
-
- <div class="tap-area">
-  <button class="coin" id="tap">
-   <span class="symbol">₿</span><b>TAP TO MINE</b>
-  </button>
-  <div class="tap-hint">Tap the coin to collect +1 point</div>
-  <div class="energy">
-   <div class="energyline"><span>ENERGY</span><span id="energyText">500 / 500</span></div>
-   <div class="bar"><div class="fill" id="energyFill"></div></div>
-  </div>
- </div>
-
- <div class="section-title">🎁 Daily check-in</div>
- <section class="card">
-  <div class="daily">
-   <div class="gift">🎁</div>
-   <div class="daily-copy">
-    <b id="dailyTitle">Claim today's reward</b>
-    <small id="dailyDesc">Watch a rewarded ad to unlock your daily points.</small>
-   </div>
-   <div class="reward">+500 PTS</div>
-  </div>
-  <button class="button" id="dailyBtn">▶ WATCH AD & CLAIM</button>
-  <div class="note">Reward is added only after a rewarded ad completes. Ads are not connected until you add an approved Adsgram block ID.</div>
- </section>
-
- <div class="section-title">🎯 Today's mission</div>
- <section class="card">
-  <div class="mission-row">
-   <div>
-    <b style="font-size:12px">Tap 100 times</b>
-    <div class="muted" id="missionProgress">Progress: 0 / 100</div>
-   </div>
-   <div class="tag">+1,000 PTS</div>
-  </div>
- </section>
-</section>
-
-<section id="tasks" class="page">
- <div class="page-head">🎯 Tasks</div>
- <div class="page-intro">Complete activities to collect in-game points.</div>
- <section class="card">
-  <div class="task-row">
-   <div class="task-icon">👆</div>
-   <div class="task-info"><b>Tap 100 times</b><small id="taskProgress">Progress: 0 / 100</small></div>
-   <span class="tag">+1,000</span>
-  </div>
-  <div class="task-row">
-   <div class="task-icon">🎁</div>
-   <div class="task-info"><b>Daily check-in</b><small>Watch a rewarded ad when available</small></div>
-   <span class="tag">+500</span>
-  </div>
-  <div class="task-row">
-   <div class="task-icon">🔥</div>
-   <div class="task-info"><b>Keep your streak</b><small>Check in on consecutive days</small></div>
-   <span class="tag">Streak</span>
-  </div>
- </section>
- <p class="note">More verified tasks will be added after we connect a backend. Never pay anyone to unlock TapRush tasks.</p>
-</section>
-
-<section id="leaderboard" class="page">
- <div class="page-head">🏆 Leaderboard</div>
- <div class="page-intro">A preview ranking until live player rankings are connected.</div>
- <section class="card">
-  <div class="rank-row"><div class="rank-num">1</div><div class="avatar">A</div><div class="rank-name">AstraMiner</div><div class="rank-points">24,850</div></div>
-  <div class="rank-row"><div class="rank-num">2</div><div class="avatar">K</div><div class="rank-name">KingTap</div><div class="rank-points">19,420</div></div>
-  <div class="rank-row"><div class="rank-num">3</div><div class="avatar">Z</div><div class="rank-name">ZedCrypto</div><div class="rank-points">15,700</div></div>
-  <div class="rank-row"><div class="rank-num">4</div><div class="avatar">N</div><div class="rank-name">NovaRush</div><div class="rank-points">12,300</div></div>
-  <div class="rank-row"><div class="rank-num">5</div><div class="avatar">M</div><div class="rank-name">MoonTapper</div><div class="rank-points">9,850</div></div>
-  <div class="you">
-   <div class="rank-row" style="border:0;padding:3px">
-    <div class="rank-num">—</div>
-    <div class="avatar" id="youAvatar">?</div>
-    <div class="rank-name"><b id="youName">You</b><div class="muted">Your local device score</div></div>
-    <div class="rank-points" id="youPoints">0</div>
-   </div>
-  </div>
- </section>
- <p class="note">These sample players are placeholders, not real users or live rankings.</p>
-</section>
-
-<section id="friends" class="page">
- <div class="page-head">👥 Friends</div>
- <div class="page-intro">Invite friends to try TapRush and help grow the community.</div>
- <section class="card">
-  <div class="eyebrow">YOUR INVITE LINK</div>
-  <div class="ref-box" id="refLink">Connecting your Telegram account...</div>
-  <button class="button" id="copyRef">COPY INVITE LINK</button>
-  <button class="button" id="shareRef" style="background:linear-gradient(90deg,#3c8fd8,#5969e8);margin-top:8px">SHARE WITH FRIENDS</button>
-  <div class="note">Referral codes are processed by the TapRush server when a new player joins through the Mini App referral link. Referral rewards are virtual game points.</div>
- </section>
- <div class="stats">
-  <div class="stat"><label>INVITED FRIENDS</label><strong id="invitedCount">0</strong></div>
-  <div class="stat"><label>REFERRAL REWARDS</label><strong id="refRewards">0 PTS</strong></div>
- </div>
-</section>
-
-<section id="profile" class="page">
- <div class="page-head">👤 Profile</div>
- <div class="page-intro">Your TapRush player details.</div>
- <section class="card">
-  <div class="profile-top">
-   <div class="big-avatar" id="profileAvatar">?</div>
-   <div>
-    <b id="profileName">Telegram player</b>
-    <small id="profileHandle">Open inside Telegram to load your account</small>
-   </div>
-  </div>
-  <div class="grid2">
-   <div class="tile"><span>TOTAL POINTS</span><strong id="profilePoints">0</strong></div>
-   <div class="tile"><span>DAILY STREAK</span><strong id="profileStreak">0 days</strong></div>
-   <div class="tile"><span>TAPS TODAY</span><strong id="profileTaps">0</strong></div>
-   <div class="tile"><span>ENERGY</span><strong id="profileEnergy">500</strong></div>
-  </div>
- </section>
- <p class="note">Your account is registered with the TapRush server. Game progress is still stored locally until secure point syncing is added.</p>
-</section>
-
-<div class="footer">
- TapRush is a points-based game prototype. Points have no cash value and do not guarantee an airdrop or token allocation. Game progress is currently stored on this device.
-</div>
-</div>
-
-<nav class="nav" aria-label="Main navigation">
- <button class="active" data-page="home"><span class="ico">🏠</span>Home</button>
- <button data-page="tasks"><span class="ico">🎯</span>Tasks</button>
- <button data-page="leaderboard"><span class="ico">🏆</span>Ranks</button>
- <button data-page="friends"><span class="ico">👥</span>Friends</button>
- <button data-page="profile"><span class="ico">👤</span>Profile</button>
+<nav class="nav">
+  <button class="active" data-page="home" onclick="showPage('home')"><b>⌂</b>Home</button>
+  <button data-page="tasks" onclick="showPage('tasks')"><b>✓</b>Tasks</button>
+  <button data-page="leaderboard" onclick="showPage('leaderboard')"><b>🏆</b>Ranks</button>
+  <button data-page="friends" onclick="showPage('friends')"><b>♧</b>Friends</button>
+  <button data-page="profile" onclick="showPage('profile')"><b>◉</b>Profile</button>
 </nav>
 
-<div class="toast" id="toast"></div>
-
 <script>
-(()=>{
- const $=id=>document.getElementById(id);
- const STORE="taprush_prototype_v1";
- const MAX=500;
- const API="https://taprush-api.derickainamani.workers.dev";
- const BOT_USERNAME="TapRushGobalBot";
- const REFERRAL_REWARD=2000;
+const API = "https://taprush-api.derickainamani.workers.dev";
+const BOT_USERNAME = "TapRushGobalBot";
+const tg = window.Telegram && window.Telegram.WebApp;
 
- const tg=window.Telegram?.WebApp;
+let initData = "";
+let player = null;
+let tapQueue = 0;
+let pumping = false;
+let lastTapSent = 0;
 
- if(tg){
-  tg.ready();
-  tg.expand();
-  $("mode").textContent="TELEGRAM MINI APP";
- }
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.style.display = "block";
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => el.style.display = "none", 2600);
+}
 
- const today=()=>{
-  const d=new Date();
-  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
- };
+async function api(path, method = "GET", data = {}) {
+  const options = { method, headers: {} };
 
- const yesterday=()=>{
-  const d=new Date();
-  d.setDate(d.getDate()-1);
-  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
- };
-
- const fresh=()=>({
-  points:0,
-  energy:MAX,
-  lastEnergyAt:Date.now(),
-  lastDaily:null,
-  streak:0,
-  tapsToday:0,
-  missionDay:today(),
-  missionClaimed:false
- });
-
- let state;
-
- try{
-  state={...fresh(),...JSON.parse(localStorage.getItem(STORE)||"{}")};
- }catch{
-  state=fresh();
- }
-
- function save(){
-  localStorage.setItem(STORE,JSON.stringify(state));
- }
-
- function toast(msg){
-  const el=$("toast");
-  el.textContent=msg;
-  el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"),2300);
- }
-
- function regen(){
-  const now=Date.now();
-  const elapsed=Math.max(0,now-(state.lastEnergyAt||now));
-  const add=Math.floor(elapsed/6000);
-
-  if(add){
-   state.energy=Math.min(MAX,state.energy+add);
-   state.lastEnergyAt+=add*6000;
-   save();
-  }
- }
-
- function render(){
-  regen();
-
-  if(state.missionDay!==today()){
-   state.missionDay=today();
-   state.tapsToday=0;
-   state.missionClaimed=false;
-   save();
+  if (method === "POST") {
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify({ ...data, initData });
   }
 
-  $("points").textContent=state.points.toLocaleString();
-  $("energyStat").textContent=`${state.energy} / ${MAX}`;
-  $("energyText").textContent=`${state.energy} / ${MAX}`;
-  $("energyFill").style.width=(state.energy/MAX*100)+"%";
-  $("streak").textContent=state.streak+" days";
-  $("missionProgress").textContent=`Progress: ${state.tapsToday} / 100`;
-  $("taskProgress").textContent=`Progress: ${state.tapsToday} / 100`;
+  const response = await fetch(API + path, options);
+  let result;
 
-  $("dailyBtn").disabled=state.lastDaily===today();
-  $("dailyBtn").textContent=state.lastDaily===today()?"✓ CLAIMED TODAY":"▶ WATCH AD & CLAIM";
-  $("dailyTitle").textContent=state.lastDaily===today()?"Today's reward claimed":"Claim today's reward";
-  $("dailyDesc").textContent=state.lastDaily===today()?"Come back tomorrow for your next check-in.":"Watch a rewarded ad to unlock your daily points.";
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("The server returned an invalid response.");
+  }
 
-  $("youPoints").textContent=state.points.toLocaleString();
-  $("profilePoints").textContent=state.points.toLocaleString();
-  $("profileStreak").textContent=state.streak+" days";
-  $("profileTaps").textContent=state.tapsToday;
-  $("profileEnergy").textContent=state.energy;
- }
+  if (!response.ok || result.success === false) {
+    throw new Error(result.error || "Request failed.");
+  }
 
- document.querySelectorAll(".nav button").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-   btn.classList.add("active");
+  return result;
+}
 
-   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-   $(btn.dataset.page).classList.add("active");
+function number(value) {
+  return Number(value || 0).toLocaleString();
+}
 
-   window.scrollTo(0,0);
+function updateUI() {
+  if (!player) return;
+
+  const points = Number(player.points || 0);
+  const energy = Number(player.energy || 0);
+  const taps = Number(player.taps_today || 0);
+  const streak = Number(player.streak || 0);
+  const claimed = Number(player.mission_claimed || 0);
+
+  document.getElementById("points").textContent = number(points);
+  document.getElementById("energy").textContent = `${energy} / 500`;
+  document.getElementById("energybar").style.width = (energy / 500 * 100) + "%";
+  document.getElementById("streak").textContent = streak;
+  document.getElementById("taps").textContent = `${taps}/100`;
+  document.getElementById("mission").textContent = claimed ? "1" : "0";
+  document.getElementById("missionbar").style.width = taps + "%";
+  document.getElementById("missionText").textContent =
+    claimed ? "Mission completed! Bonus awarded." : `${taps} of 100 taps completed`;
+
+  document.getElementById("tapButton").disabled = energy < 1;
+  document.getElementById("tapButton").textContent = energy < 1 ? "NO ENERGY" : "TAP!";
+  document.getElementById("tapStatus").textContent =
+    energy < 1 ? "Wait for energy to regenerate." : "Tap to collect points";
+
+  document.getElementById("profilePoints").textContent = number(points);
+  document.getElementById("profileEnergy").textContent = energy + " / 500";
+  document.getElementById("profileStreak").textContent = streak;
+  document.getElementById("profileTaps").textContent = taps + " / 100";
+
+  const firstName = player.first_name || "Player";
+  document.getElementById("playerName").textContent = firstName;
+  document.getElementById("playerUsername").textContent =
+    player.username ? "@" + player.username : "Telegram player";
+
+  const dailyButton = document.getElementById("dailyButton");
+  dailyButton.disabled = player.daily_claimed === true;
+  dailyButton.textContent = dailyButton.disabled ? "Claimed" : "Claim";
+  document.getElementById("taskDaily").disabled = dailyButton.disabled;
+}
+
+async function register() {
+  if (!tg || !tg.initData) {
+    throw new Error("Please open TapRush from its Telegram bot.");
+  }
+
+  initData = tg.initData;
+  const result = await api("/register", "POST");
+
+  player = result.player;
+  updateUI();
+
+  const code = player.referral_code;
+  const link = `https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(code)}`;
+  document.getElementById("refLink").value = link;
+
+  document.getElementById("connection").textContent = "● Connected";
+  document.getElementById("connection").style.color = "#9de6bc";
+
+  await refreshAll();
+}
+
+async function refreshState() {
+  const result = await api("/state", "POST");
+  player = { ...player, ...result.player };
+  updateUI();
+}
+
+async function refreshAll() {
+  try {
+    await refreshState();
+    await Promise.all([loadLeaderboard(), loadReferralStats()]);
+    toast("Account updated.");
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+function tap() {
+  if (!player || Number(player.energy) < 1) return;
+
+  // Queue taps and send batches to the server.
+  if (Number(player.energy) - tapQueue <= 0) {
+    toast("Not enough energy. Wait for regeneration.");
+    return;
+  }
+
+  tapQueue++;
+  document.getElementById("tapStatus").textContent =
+    tapQueue + " tap(s) waiting to save...";
+
+  if (tapQueue >= 10) {
+    pumpTaps();
+  } else if (!window.tapTimer) {
+    window.tapTimer = setTimeout(() => {
+      window.tapTimer = null;
+      pumpTaps();
+    }, 800);
+  }
+}
+
+async function pumpTaps() {
+  if (pumping || tapQueue < 1) return;
+  pumping = true;
+
+  if (window.tapTimer) {
+    clearTimeout(window.tapTimer);
+    window.tapTimer = null;
+  }
+
+  const wait = Math.max(0, 750 - (Date.now() - lastTapSent));
+  if (wait) await new Promise(resolve => setTimeout(resolve, wait));
+
+  const count = Math.min(10, tapQueue);
+  tapQueue -= count;
+
+  try {
+    const result = await api("/tap", "POST", { count });
+    player = result.player;
+    lastTapSent = Date.now();
+    updateUI();
+    document.getElementById("tapStatus").textContent =
+      tapQueue ? tapQueue + " tap(s) waiting to save..." : "Tap to collect points";
+  } catch (error) {
+    tapQueue = 0;
+    toast(error.message);
+    try { await refreshState(); } catch {}
+  }
+
+  pumping = false;
+
+  if (tapQueue > 0) {
+    pumpTaps();
+  }
+}
+
+document.getElementById("tapButton").addEventListener("click", tap);
+
+async function claimDaily() {
+  const buttons = [
+    document.getElementById("dailyButton"),
+    document.getElementById("taskDaily")
+  ];
+
+  buttons.forEach(button => button.disabled = true);
+
+  try {
+    const result = await api("/claim-daily", "POST");
+    player = result.player;
+    updateUI();
+    toast("Daily reward claimed: +" + number(result.reward) + " points!");
+  } catch (error) {
+    toast(error.message);
+    buttons.forEach(button => button.disabled = false);
+    try { await refreshState(); } catch {}
+  }
+}
+
+document.getElementById("dailyButton").addEventListener("click", claimDaily);
+document.getElementById("taskDaily").addEventListener("click", claimDaily);
+
+async function loadLeaderboard() {
+  const list = document.getElementById("leaderList");
+  list.innerHTML = '<div class="empty">Loading players...</div>';
+
+  try {
+    const result = await api("/leaderboard");
+    if (!result.leaderboard || result.leaderboard.length === 0) {
+      list.innerHTML = '<div class="empty">No players yet. Be among the first!</div>';
+      return;
+    }
+
+    list.innerHTML = result.leaderboard.map(p => {
+      const name = escapeHTML(p.username ? "@" + p.username : p.first_name || "Player");
+      return `<div class="leader">
+        <div class="rank">${p.rank}</div>
+        <div class="person"><strong>${name}</strong><span>TapRush player</span></div>
+        <div class="score">${number(p.points)} pts</div>
+      </div>`;
+    }).join("");
+  } catch (error) {
+    list.innerHTML = '<div class="empty">Could not load rankings. Check your connection.</div>';
+  }
+}
+
+async function loadReferralStats() {
+  try {
+    const result = await api("/referral-stats", "POST");
+    document.getElementById("refTotal").textContent = number(result.total_referrals);
+    document.getElementById("refSuccess").textContent = number(result.successful_referrals);
+    document.getElementById("refPoints").textContent = number(result.points_earned);
+  } catch (error) {
+    console.log("Referral stats:", error.message);
+  }
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
+}
+
+async function copyReferral() {
+  const link = document.getElementById("refLink").value;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(link);
+    } else {
+      const input = document.getElementById("refLink");
+      input.select();
+      document.execCommand("copy");
+    }
+    toast("Referral link copied!");
+  } catch {
+    toast("Please copy the link manually.");
+  }
+}
+
+function shareReferral() {
+  const link = document.getElementById("refLink").value;
+  const message = "Join me on TapRush! Tap. Collect. Rise. " + link;
+
+  if (tg && tg.openTelegramLink) {
+    tg.openTelegramLink("https://t.me/share/url?url=" +
+      encodeURIComponent(link) + "&text=" + encodeURIComponent("Join me on TapRush!"));
+  } else if (navigator.share) {
+    navigator.share({ title: "TapRush", text: message, url: link });
+  } else {
+    copyReferral();
+  }
+}
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(section => {
+    section.classList.toggle("active", section.id === page);
   });
- });
 
- $("tap").addEventListener("click",()=>{
-  regen();
+  document.querySelectorAll(".nav button").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
 
-  if(state.energy<=0){
-   toast("Energy depleted. It recharges over time.");
-   return;
+  if (page === "leaderboard") loadLeaderboard();
+  if (page === "friends") loadReferralStats();
+}
+
+async function startApp() {
+  try {
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      if (tg.setHeaderColor) tg.setHeaderColor("#100d20");
+      if (tg.setBackgroundColor) tg.setBackgroundColor("#100d20");
+    }
+
+    await register();
+
+    // Refresh server-backed energy and progress periodically.
+    setInterval(async () => {
+      if (!pumping && tapQueue === 0) {
+        try { await refreshState(); } catch {}
+      }
+    }, 15000);
+
+  } catch (error) {
+    document.getElementById("connection").textContent = "● Offline";
+    document.getElementById("connection").style.color = "#ff7777";
+    document.getElementById("tapButton").disabled = true;
+    document.getElementById("tapButton").textContent = "OFFLINE";
+    document.getElementById("tapStatus").textContent = error.message;
+    toast(error.message);
   }
+}
 
-  state.points++;
-  state.energy--;
-  state.tapsToday++;
-
-  if(state.tapsToday>=100&&!state.missionClaimed){
-   state.points+=1000;
-   state.missionClaimed=true;
-   toast("Mission completed! +1,000 points");
-  }
-
-  save();
-  render();
- });
-
- async function showAd(){
-  const id="PASTE_YOUR_ADSGRAM_REWARD_BLOCK_ID";
-
-  if(id.includes("PASTE_")){
-   toast("Ads are not connected yet. We will set up AdsGram later.");
-   return false;
-  }
-
-  if(!window.Adsgram?.init){
-   toast("Adsgram SDK did not load.");
-   return false;
-  }
-
-  try{
-   const result=await window.Adsgram.init({blockId:id}).show();
-   return result?.done===true;
-  }catch(e){
-   return false;
-  }
- }
-
- $("dailyBtn").addEventListener("click",async()=>{
-  if(state.lastDaily===today())return;
-
-  $("dailyBtn").disabled=true;
-  const ok=await showAd();
-
-  if(ok){
-   state.streak=state.lastDaily===yesterday()?state.streak+1:1;
-   state.lastDaily=today();
-   state.points+=500;
-   save();
-   toast("Reward unlocked: +500 points!");
-  }else{
-   toast("No completed ad. No points added.");
-  }
-
-  render();
- });
-
- const user=tg?.initDataUnsafe?.user;
-
- if(user){
-  const name=[user.first_name,user.last_name].filter(Boolean).join(" ")||"Telegram player";
-
-  $("profileName").textContent=name;
-  $("profileHandle").textContent=user.username?"@"+user.username:"Telegram user";
-  $("youName").textContent=name;
-  $("youAvatar").textContent=(user.first_name||"U")[0].toUpperCase();
-  $("profileAvatar").textContent=(user.first_name||"U")[0].toUpperCase();
-
-  if(user.photo_url){
-   const a=$("profileAvatar");
-   a.style.backgroundImage=`url("${user.photo_url}")`;
-   a.style.backgroundSize="cover";
-   a.textContent="";
-  }
- }
-
- let link="Open TapRush inside Telegram to generate your invite link.";
- $("refLink").textContent=link;
-
- async function registerPlayer(){
-  if(!tg?.initData){
-   $("refLink").textContent="Open TapRush inside Telegram to register your account.";
-   toast("Open TapRush through Telegram to connect your account.");
-   return;
-  }
-
-  try{
-   const response=await fetch(API+"/register",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({initData:tg.initData})
-   });
-
-   const data=await response.json();
-
-   if(!response.ok||!data.success){
-    throw new Error(data.error||"Registration failed");
-   }
-
-   const player=data.player;
-
-   if(!player||!player.referral_code){
-    throw new Error("Player referral code missing");
-   }
-
-   // Telegram Mini App referral link
-   link=`https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(player.referral_code)}`;
-
-   $("refLink").textContent=link;
-
-   if(data.referral?.rewardReceived){
-    toast("Your inviter received "+REFERRAL_REWARD+" referral points!");
-   }else{
-    toast("Telegram account connected!");
-   }
-
-   console.log("TapRush player registered:",player.telegram_id);
-   console.log("Referral result:",data.referral);
-
-  }catch(error){
-   console.error("TapRush registration error:",error);
-   $("refLink").textContent="Account connection failed. Reopen TapRush and try again.";
-   toast("Could not connect to TapRush server.");
-  }
- }
-
- registerPlayer();
-
- $("copyRef").addEventListener("click",async()=>{
-  if(!link.startsWith("https://")){
-   toast("Connect your Telegram account first.");
-   return;
-  }
-
-  try{
-   await navigator.clipboard.writeText(link);
-   toast("Invite link copied");
-  }catch{
-   toast("Copy is unavailable in this browser");
-  }
- });
-
- $("shareRef").addEventListener("click",()=>{
-  if(!link.startsWith("https://")){
-   toast("Connect your Telegram account first.");
-   return;
-  }
-
-  if(tg?.openTelegramLink){
-   tg.openTelegramLink(
-    "https://t.me/share/url?url="+encodeURIComponent(link)+
-    "&text="+encodeURIComponent("Join me on TapRush!")
-   );
-  }else if(navigator.share){
-   navigator.share({
-    title:"TapRush",
-    text:"Join me on TapRush!",
-    url:link
-   }).catch(()=>{});
-  }else{
-   toast("Sharing is unavailable in this browser");
-  }
- });
-
- render();
- setInterval(render,5000);
-})();
+startApp();
 </script>
 </body>
 </html>

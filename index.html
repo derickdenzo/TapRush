@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,56 +7,321 @@
 <title>TapRush — Tap. Collect. Rise.</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
 <style>
 :root{color-scheme:dark;--bg:#100d20;--panel:#1c1730;--panel2:#28203e;--line:#3b3054;--muted:#aaa2c3;--purple:#9b72ff;--pink:#e879f9;--gold:#ffd36a;--green:#65e6ad}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#38215f 0,#17112b 38%,var(--bg) 75%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px 15px 100px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-weight:950;font-size:22px;letter-spacing:.3px}.brand span{color:var(--pink)}.pill{font-size:10px;color:#d6c9f5;border:1px solid #51416f;border-radius:99px;padding:7px 10px;background:#211936}
-.balance,.panel{background:linear-gradient(145deg,#30204f,#1c1730);border:1px solid #554078;border-radius:21px;padding:17px;box-shadow:0 14px 35px #08061155}.eyebrow{color:var(--muted);font-size:10px;letter-spacing:1.5px;font-weight:800}.points{font-size:39px;font-weight:950;letter-spacing:-1.5px;margin:5px 0}.points small{font-size:12px;color:var(--gold);letter-spacing:1px}.sub,.muted{font-size:12px;color:var(--muted);line-height:1.5}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.stat,.tile{background:#1b1630;border:1px solid #34284d;border-radius:16px;padding:13px}.stat label{display:block;color:var(--muted);font-size:10px;margin-bottom:6px}.stat strong{font-size:17px}
-.tap-area{display:flex;flex-direction:column;align-items:center;padding:13px 0 10px}.coin{width:184px;height:184px;border-radius:50%;border:0;cursor:pointer;color:#3b2255;background:radial-gradient(circle at 35% 28%,#fff2bd 0,#ffd66f 35%,#f5a623 70%,#c46a16 100%);box-shadow:0 0 0 10px #ffd36a14,0 0 42px #f6b94266,inset 0 5px 10px #fff8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}.coin:active{transform:scale(.96)}.coin .symbol{font-size:56px;font-weight:950;line-height:1}.coin b{font-size:11px;letter-spacing:1px}.tap-hint{font-size:12px;color:var(--muted);margin-top:16px}.energy{width:100%;max-width:300px;margin-top:17px}.energyline{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:7px}.bar{height:8px;border-radius:20px;background:#34284d;overflow:hidden}.fill{height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#e879f9);border-radius:20px}
-.section-title{font-size:14px;font-weight:850;margin:18px 0 10px}.card{background:#1b1630;border:1px solid #34284d;border-radius:17px;padding:14px;margin-bottom:10px}.daily{display:flex;align-items:center;gap:10px}.gift{font-size:25px}.daily-copy{flex:1}.daily-copy b,.daily-copy small{display:block}.daily-copy b{font-size:13px}.daily-copy small{font-size:10px;color:var(--muted);margin-top:4px}.reward{font-size:11px;color:var(--gold);font-weight:900;white-space:nowrap}.button{width:100%;border:0;border-radius:12px;padding:13px;background:linear-gradient(90deg,#8b5cf6,#c45cf6);font-size:11px;font-weight:900;letter-spacing:.5px;margin-top:13px}.button:disabled{opacity:.45}.note{font-size:10px;line-height:1.5;color:var(--muted);margin-top:10px}.mission-row,.person,.task-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.tag{font-size:10px;color:var(--gold);font-weight:850}.page{display:none}.page.active{display:block}.page-head{font-size:22px;font-weight:950;margin:8px 0 4px}.page-intro{font-size:12px;color:var(--muted);margin-bottom:16px}.task-row{padding:13px 0;border-bottom:1px solid #332847}.task-row:last-child{border:0}.task-icon{font-size:22px;width:34px}.task-info{flex:1}.task-info b,.task-info small{display:block}.task-info b{font-size:12px}.task-info small{font-size:10px;color:var(--muted);margin-top:4px}.small-btn{border:1px solid #7656aa;background:#34244f;color:#fff;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:800}.small-btn.done{color:var(--green);border-color:#356b59;background:#18382f}.rank-row{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid #332847;font-size:12px}.rank-num{width:24px;color:var(--gold);font-weight:900}.avatar{width:32px;height:32px;border-radius:50%;background:#49336d;display:grid;place-items:center;font-weight:900}.rank-name{flex:1}.rank-points{font-weight:850}.you{background:#30234b;border-radius:12px;padding:10px;margin-top:8px}.ref-box{background:#130f22;border:1px dashed #70559b;border-radius:12px;padding:12px;font-size:11px;word-break:break-all;color:#d9cafa;margin:12px 0}.profile-top{display:flex;align-items:center;gap:12px}.big-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#9b72ff,#e879f9);display:grid;place-items:center;font-size:23px;font-weight:900}.profile-top b,.profile-top small{display:block}.profile-top small{color:var(--muted);font-size:11px;margin-top:4px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.tile strong{font-size:18px;display:block;margin-top:5px}.tile span{font-size:10px;color:var(--muted)}.footer{text-align:center;color:#807696;font-size:9px;line-height:1.5;margin-top:20px}.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#171126ee;border-top:1px solid #3b3054;backdrop-filter:blur(12px);z-index:5}.nav button{background:none;border:0;color:#9288aa;font-size:9px;padding:5px 0;display:flex;flex-direction:column;align-items:center;gap:4px}.nav button .ico{font-size:18px}.nav button.active{color:#e8d9ff}.nav button.active .ico{filter:drop-shadow(0 0 7px #b68cff)}.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#32264a;border:1px solid #7656aa;padding:11px 15px;border-radius:12px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:10;max-width:90%;text-align:center}.toast.show{opacity:1}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -10%,#38215f 0,#17112b 38%,var(--bg) 75%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit}
+.wrap{max-width:480px;margin:auto;padding:16px 15px 100px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand{font-weight:950;font-size:22px;letter-spacing:.3px}
+.brand span{color:var(--pink)}
+.pill{font-size:10px;color:#d6c9f5;border:1px solid #51416f;border-radius:99px;padding:7px 10px;background:#211936}
+.balance,.panel{background:linear-gradient(145deg,#30204f,#1c1730);border:1px solid #554078;border-radius:21px;padding:17px;box-shadow:0 14px 35px #08061155}
+.eyebrow{color:var(--muted);font-size:10px;letter-spacing:1.5px;font-weight:800}
+.points{font-size:39px;font-weight:950;letter-spacing:-1.5px;margin:5px 0}
+.points small{font-size:12px;color:var(--gold);letter-spacing:1px}
+.sub,.muted{font-size:12px;color:var(--muted);line-height:1.5}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat,.tile{background:#1b1630;border:1px solid #34284d;border-radius:16px;padding:13px}
+.stat label{display:block;color:var(--muted);font-size:10px;margin-bottom:6px}
+.stat strong{font-size:17px}
+.tap-area{display:flex;flex-direction:column;align-items:center;padding:13px 0 10px}
+.coin{width:184px;height:184px;border-radius:50%;border:0;cursor:pointer;color:#3b2255;background:radial-gradient(circle at 35% 28%,#fff2bd 0,#ffd66f 35%,#f5a623 70%,#c46a16 100%);box-shadow:0 0 0 10px #ffd36a14,0 0 42px #f6b94266,inset 0 5px 10px #fff8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;touch-action:manipulation}
+.coin:active{transform:scale(.96)}
+.coin .symbol{font-size:56px;font-weight:950;line-height:1}
+.coin b{font-size:11px;letter-spacing:1px}
+.tap-hint{font-size:12px;color:var(--muted);margin-top:16px}
+.energy{width:100%;max-width:300px;margin-top:17px}
+.energyline{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:7px}
+.bar{height:8px;border-radius:20px;background:#34284d;overflow:hidden}
+.fill{height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#e879f9);border-radius:20px}
+.section-title{font-size:14px;font-weight:850;margin:18px 0 10px}
+.card{background:#1b1630;border:1px solid #34284d;border-radius:17px;padding:14px;margin-bottom:10px}
+.daily{display:flex;align-items:center;gap:10px}
+.gift{font-size:25px}
+.daily-copy{flex:1}
+.daily-copy b,.daily-copy small{display:block}
+.daily-copy b{font-size:13px}
+.daily-copy small{font-size:10px;color:var(--muted);margin-top:4px}
+.reward{font-size:11px;color:var(--gold);font-weight:900;white-space:nowrap}
+.button{width:100%;border:0;border-radius:12px;padding:13px;background:linear-gradient(90deg,#8b5cf6,#c45cf6);font-size:11px;font-weight:900;letter-spacing:.5px;margin-top:13px}
+.button:disabled{opacity:.45}
+.note{font-size:10px;line-height:1.5;color:var(--muted);margin-top:10px}
+.mission-row,.person,.task-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tag{font-size:10px;color:var(--gold);font-weight:850}
+.page{display:none}
+.page.active{display:block}
+.page-head{font-size:22px;font-weight:950;margin:8px 0 4px}
+.page-intro{font-size:12px;color:var(--muted);margin-bottom:16px}
+.task-row{padding:13px 0;border-bottom:1px solid #332847}
+.task-row:last-child{border:0}
+.task-icon{font-size:22px;width:34px}
+.task-info{flex:1}
+.task-info b,.task-info small{display:block}
+.task-info b{font-size:12px}
+.task-info small{font-size:10px;color:var(--muted);margin-top:4px}
+.small-btn{border:1px solid #7656aa;background:#34244f;color:#fff;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:800}
+.small-btn.done{color:var(--green);border-color:#356b59;background:#18382f}
+.rank-row{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid #332847;font-size:12px}
+.rank-num{width:24px;color:var(--gold);font-weight:900}
+.avatar{width:32px;height:32px;border-radius:50%;background:#49336d;display:grid;place-items:center;font-weight:900}
+.rank-name{flex:1}
+.rank-points{font-weight:850}
+.you{background:#30234b;border-radius:12px;padding:10px;margin-top:8px}
+.ref-box{background:#130f22;border:1px dashed #70559b;border-radius:12px;padding:12px;font-size:11px;word-break:break-all;color:#d9cafa;margin:12px 0}
+.profile-top{display:flex;align-items:center;gap:12px}
+.big-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#9b72ff,#e879f9);display:grid;place-items:center;font-size:23px;font-weight:900}
+.profile-top b,.profile-top small{display:block}
+.profile-top small{color:var(--muted);font-size:11px;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.tile strong{font-size:18px;display:block;margin-top:5px}
+.tile span{font-size:10px;color:var(--muted)}
+.footer{text-align:center;color:#807696;font-size:9px;line-height:1.5;margin-top:20px}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#171126ee;border-top:1px solid #3b3054;backdrop-filter:blur(12px);z-index:5}
+.nav button{background:none;border:0;color:#9288aa;font-size:9px;padding:5px 0;display:flex;flex-direction:column;align-items:center;gap:4px}
+.nav button .ico{font-size:18px}
+.nav button.active{color:#e8d9ff}
+.nav button.active .ico{filter:drop-shadow(0 0 7px #b68cff)}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#32264a;border:1px solid #7656aa;padding:11px 15px;border-radius:12px;font-size:11px;opacity:0;pointer-events:none;transition:.2s;z-index:10;max-width:90%;text-align:center}
+.toast.show{opacity:1}
 </style>
 </head>
+
 <body>
 <div class="wrap">
- <div class="top"><div class="brand">TAP<span>RUSH</span> ⚡</div><div class="pill" id="mode">MINI APP</div></div>
- <section id="home" class="page active">
-  <section class="balance"><div class="eyebrow">YOUR TOTAL POINTS</div><div class="points"><span id="points">0</span> <small>PTS</small></div><div class="sub">Tap. Collect. Rise. Build your streak and climb the ranks.</div></section>
-  <div class="stats"><div class="stat"><label>⚡ ENERGY</label><strong id="energyStat">500 / 500</strong></div><div class="stat"><label>🔥 DAILY STREAK</label><strong id="streak">0 days</strong></div></div>
-  <div class="tap-area"><button class="coin" id="tap"><span class="symbol">₿</span><b>TAP TO MINE</b></button><div class="tap-hint">Tap the coin to collect +1 point</div><div class="energy"><div class="energyline"><span>ENERGY</span><span id="energyText">500 / 500</span></div><div class="bar"><div class="fill" id="energyFill"></div></div></div></div>
-  <div class="section-title">🎁 Daily check-in</div><section class="card"><div class="daily"><div class="gift">🎁</div><div class="daily-copy"><b id="dailyTitle">Claim today's reward</b><small id="dailyDesc">Watch a rewarded ad to unlock your daily points.</small></div><div class="reward">+500 PTS</div></div><button class="button" id="dailyBtn">▶ WATCH AD & CLAIM</button><div class="note">Reward is added only after a rewarded ad completes. Ads are not connected until you add an approved Adsgram block ID.</div></section>
-  <div class="section-title">🎯 Today's mission</div><section class="card"><div class="mission-row"><div><b style="font-size:12px">Tap 100 times</b><div class="muted" id="missionProgress">Progress: 0 / 100</div></div><div class="tag">+1,000 PTS</div></div></section>
- </section>
- <section id="tasks" class="page"><div class="page-head">🎯 Tasks</div><div class="page-intro">Complete activities to collect in-game points.</div><section class="card">
-  <div class="task-row"><div class="task-icon">👆</div><div class="task-info"><b>Tap 100 times</b><small id="taskProgress">Progress: 0 / 100</small></div><span class="tag">+1,000</span></div>
-  <div class="task-row"><div class="task-icon">🎁</div><div class="task-info"><b>Daily check-in</b><small>Watch a rewarded ad when available</small></div><span class="tag">+500</span></div>
-  <div class="task-row"><div class="task-icon">🔥</div><div class="task-info"><b>Keep your streak</b><small>Check in on consecutive days</small></div><span class="tag">Streak</span></div>
- </section><p class="note">More verified tasks will be added after we connect a backend. Never pay anyone to unlock TapRush tasks.</p></section>
- <section id="leaderboard" class="page"><div class="page-head">🏆 Leaderboard</div><div class="page-intro">A preview ranking until player accounts and the live database are connected.</div><section class="card"><div class="rank-row"><div class="rank-num">1</div><div class="avatar">A</div><div class="rank-name">AstraMiner</div><div class="rank-points">24,850</div></div><div class="rank-row"><div class="rank-num">2</div><div class="avatar">K</div><div class="rank-name">KingTap</div><div class="rank-points">19,420</div></div><div class="rank-row"><div class="rank-num">3</div><div class="avatar">Z</div><div class="rank-name">ZedCrypto</div><div class="rank-points">15,700</div></div><div class="rank-row"><div class="rank-num">4</div><div class="avatar">N</div><div class="rank-name">NovaRush</div><div class="rank-points">12,300</div></div><div class="rank-row"><div class="rank-num">5</div><div class="avatar">M</div><div class="rank-name">MoonTapper</div><div class="rank-points">9,850</div></div><div class="you"><div class="rank-row" style="border:0;padding:3px"><div class="rank-num">—</div><div class="avatar" id="youAvatar">?</div><div class="rank-name"><b id="youName">You</b><div class="muted">Your local device score</div></div><div class="rank-points" id="youPoints">0</div></div></div></section><p class="note">These sample players are placeholders, not real users or live rankings.</p></section>
- <section id="friends" class="page"><div class="page-head">👥 Friends</div><div class="page-intro">Invite friends to try TapRush. Referral rewards will activate after server-side tracking is built.</div><section class="card"><div class="eyebrow">YOUR INVITE LINK</div><div class="ref-box" id="refLink">Connecting your Telegram account...</div><button class="button" id="copyRef">COPY INVITE LINK</button><button class="button" id="shareRef" style="background:linear-gradient(90deg,#3c8fd8,#5969e8);margin-top:8px">SHARE WITH FRIENDS</button><div class="note">Referral points are not active yet. We will enable them only after each referral is verified by the server.</div></section><div class="stats"><div class="stat"><label>INVITED FRIENDS</label><strong>0</strong></div><div class="stat"><label>REFERRAL REWARDS</label><strong>0 PTS</strong></div></div></section>
- <section id="profile" class="page"><div class="page-head">👤 Profile</div><div class="page-intro">Your TapRush player details.</div><section class="card"><div class="profile-top"><div class="big-avatar" id="profileAvatar">?</div><div><b id="profileName">Telegram player</b><small id="profileHandle">Open inside Telegram to load your account</small></div></div><div class="grid2"><div class="tile"><span>TOTAL POINTS</span><strong id="profilePoints">0</strong></div><div class="tile"><span>DAILY STREAK</span><strong id="profileStreak">0 days</strong></div><div class="tile"><span>TAPS TODAY</span><strong id="profileTaps">0</strong></div><div class="tile"><span>ENERGY</span><strong id="profileEnergy">500</strong></div></div></section><p class="note">Your account is registered with the TapRush server. Game progress is still stored locally until secure point syncing is added.</p></section>
- <div class="footer">TapRush is a points-based game prototype. Points have no cash value and do not guarantee an airdrop or token allocation. Game progress is currently stored on this device.</div>
+
+<div class="top">
+ <div class="brand">TAP<span>RUSH</span> ⚡</div>
+ <div class="pill" id="mode">MINI APP</div>
 </div>
-<nav class="nav" aria-label="Main navigation"><button class="active" data-page="home"><span class="ico">🏠</span>Home</button><button data-page="tasks"><span class="ico">🎯</span>Tasks</button><button data-page="leaderboard"><span class="ico">🏆</span>Ranks</button><button data-page="friends"><span class="ico">👥</span>Friends</button><button data-page="profile"><span class="ico">👤</span>Profile</button></nav>
+
+<section id="home" class="page active">
+ <section class="balance">
+  <div class="eyebrow">YOUR TOTAL POINTS</div>
+  <div class="points"><span id="points">0</span> <small>PTS</small></div>
+  <div class="sub">Tap. Collect. Rise. Build your streak and climb the ranks.</div>
+ </section>
+
+ <div class="stats">
+  <div class="stat"><label>⚡ ENERGY</label><strong id="energyStat">500 / 500</strong></div>
+  <div class="stat"><label>🔥 DAILY STREAK</label><strong id="streak">0 days</strong></div>
+ </div>
+
+ <div class="tap-area">
+  <button class="coin" id="tap">
+   <span class="symbol">₿</span><b>TAP TO MINE</b>
+  </button>
+  <div class="tap-hint">Tap the coin to collect +1 point</div>
+  <div class="energy">
+   <div class="energyline"><span>ENERGY</span><span id="energyText">500 / 500</span></div>
+   <div class="bar"><div class="fill" id="energyFill"></div></div>
+  </div>
+ </div>
+
+ <div class="section-title">🎁 Daily check-in</div>
+ <section class="card">
+  <div class="daily">
+   <div class="gift">🎁</div>
+   <div class="daily-copy">
+    <b id="dailyTitle">Claim today's reward</b>
+    <small id="dailyDesc">Watch a rewarded ad to unlock your daily points.</small>
+   </div>
+   <div class="reward">+500 PTS</div>
+  </div>
+  <button class="button" id="dailyBtn">▶ WATCH AD & CLAIM</button>
+  <div class="note">Reward is added only after a rewarded ad completes. Ads are not connected until you add an approved Adsgram block ID.</div>
+ </section>
+
+ <div class="section-title">🎯 Today's mission</div>
+ <section class="card">
+  <div class="mission-row">
+   <div>
+    <b style="font-size:12px">Tap 100 times</b>
+    <div class="muted" id="missionProgress">Progress: 0 / 100</div>
+   </div>
+   <div class="tag">+1,000 PTS</div>
+  </div>
+ </section>
+</section>
+
+<section id="tasks" class="page">
+ <div class="page-head">🎯 Tasks</div>
+ <div class="page-intro">Complete activities to collect in-game points.</div>
+ <section class="card">
+  <div class="task-row">
+   <div class="task-icon">👆</div>
+   <div class="task-info"><b>Tap 100 times</b><small id="taskProgress">Progress: 0 / 100</small></div>
+   <span class="tag">+1,000</span>
+  </div>
+  <div class="task-row">
+   <div class="task-icon">🎁</div>
+   <div class="task-info"><b>Daily check-in</b><small>Watch a rewarded ad when available</small></div>
+   <span class="tag">+500</span>
+  </div>
+  <div class="task-row">
+   <div class="task-icon">🔥</div>
+   <div class="task-info"><b>Keep your streak</b><small>Check in on consecutive days</small></div>
+   <span class="tag">Streak</span>
+  </div>
+ </section>
+ <p class="note">More verified tasks will be added after we connect a backend. Never pay anyone to unlock TapRush tasks.</p>
+</section>
+
+<section id="leaderboard" class="page">
+ <div class="page-head">🏆 Leaderboard</div>
+ <div class="page-intro">A preview ranking until live player rankings are connected.</div>
+ <section class="card">
+  <div class="rank-row"><div class="rank-num">1</div><div class="avatar">A</div><div class="rank-name">AstraMiner</div><div class="rank-points">24,850</div></div>
+  <div class="rank-row"><div class="rank-num">2</div><div class="avatar">K</div><div class="rank-name">KingTap</div><div class="rank-points">19,420</div></div>
+  <div class="rank-row"><div class="rank-num">3</div><div class="avatar">Z</div><div class="rank-name">ZedCrypto</div><div class="rank-points">15,700</div></div>
+  <div class="rank-row"><div class="rank-num">4</div><div class="avatar">N</div><div class="rank-name">NovaRush</div><div class="rank-points">12,300</div></div>
+  <div class="rank-row"><div class="rank-num">5</div><div class="avatar">M</div><div class="rank-name">MoonTapper</div><div class="rank-points">9,850</div></div>
+  <div class="you">
+   <div class="rank-row" style="border:0;padding:3px">
+    <div class="rank-num">—</div>
+    <div class="avatar" id="youAvatar">?</div>
+    <div class="rank-name"><b id="youName">You</b><div class="muted">Your local device score</div></div>
+    <div class="rank-points" id="youPoints">0</div>
+   </div>
+  </div>
+ </section>
+ <p class="note">These sample players are placeholders, not real users or live rankings.</p>
+</section>
+
+<section id="friends" class="page">
+ <div class="page-head">👥 Friends</div>
+ <div class="page-intro">Invite friends to try TapRush and help grow the community.</div>
+ <section class="card">
+  <div class="eyebrow">YOUR INVITE LINK</div>
+  <div class="ref-box" id="refLink">Connecting your Telegram account...</div>
+  <button class="button" id="copyRef">COPY INVITE LINK</button>
+  <button class="button" id="shareRef" style="background:linear-gradient(90deg,#3c8fd8,#5969e8);margin-top:8px">SHARE WITH FRIENDS</button>
+  <div class="note">Referral codes are processed by the TapRush server when a new player joins through the Mini App referral link. Referral rewards are virtual game points.</div>
+ </section>
+ <div class="stats">
+  <div class="stat"><label>INVITED FRIENDS</label><strong id="invitedCount">0</strong></div>
+  <div class="stat"><label>REFERRAL REWARDS</label><strong id="refRewards">0 PTS</strong></div>
+ </div>
+</section>
+
+<section id="profile" class="page">
+ <div class="page-head">👤 Profile</div>
+ <div class="page-intro">Your TapRush player details.</div>
+ <section class="card">
+  <div class="profile-top">
+   <div class="big-avatar" id="profileAvatar">?</div>
+   <div>
+    <b id="profileName">Telegram player</b>
+    <small id="profileHandle">Open inside Telegram to load your account</small>
+   </div>
+  </div>
+  <div class="grid2">
+   <div class="tile"><span>TOTAL POINTS</span><strong id="profilePoints">0</strong></div>
+   <div class="tile"><span>DAILY STREAK</span><strong id="profileStreak">0 days</strong></div>
+   <div class="tile"><span>TAPS TODAY</span><strong id="profileTaps">0</strong></div>
+   <div class="tile"><span>ENERGY</span><strong id="profileEnergy">500</strong></div>
+  </div>
+ </section>
+ <p class="note">Your account is registered with the TapRush server. Game progress is still stored locally until secure point syncing is added.</p>
+</section>
+
+<div class="footer">
+ TapRush is a points-based game prototype. Points have no cash value and do not guarantee an airdrop or token allocation. Game progress is currently stored on this device.
+</div>
+</div>
+
+<nav class="nav" aria-label="Main navigation">
+ <button class="active" data-page="home"><span class="ico">🏠</span>Home</button>
+ <button data-page="tasks"><span class="ico">🎯</span>Tasks</button>
+ <button data-page="leaderboard"><span class="ico">🏆</span>Ranks</button>
+ <button data-page="friends"><span class="ico">👥</span>Friends</button>
+ <button data-page="profile"><span class="ico">👤</span>Profile</button>
+</nav>
+
 <div class="toast" id="toast"></div>
+
 <script>
 (()=>{
- const $=id=>document.getElementById(id), STORE="taprush_prototype_v1", MAX=500, REGEN=10;
+ const $=id=>document.getElementById(id);
+ const STORE="taprush_prototype_v1";
+ const MAX=500;
  const API="https://taprush-api.derickainamani.workers.dev";
- const tg=window.Telegram?.WebApp;
- if(tg){tg.ready();tg.expand();$("mode").textContent="TELEGRAM MINI APP";}
+ const BOT_USERNAME="TapRushGobalBot";
+ const REFERRAL_REWARD=2000;
 
- const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")};
- const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")};
- const fresh=()=>({points:0,energy:MAX,lastEnergyAt:Date.now(),lastDaily:null,streak:0,tapsToday:0,missionDay:today(),missionClaimed:false});
+ const tg=window.Telegram?.WebApp;
+
+ if(tg){
+  tg.ready();
+  tg.expand();
+  $("mode").textContent="TELEGRAM MINI APP";
+ }
+
+ const today=()=>{
+  const d=new Date();
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+ };
+
+ const yesterday=()=>{
+  const d=new Date();
+  d.setDate(d.getDate()-1);
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+ };
+
+ const fresh=()=>({
+  points:0,
+  energy:MAX,
+  lastEnergyAt:Date.now(),
+  lastDaily:null,
+  streak:0,
+  tapsToday:0,
+  missionDay:today(),
+  missionClaimed:false
+ });
+
  let state;
- try{state={...fresh(),...JSON.parse(localStorage.getItem(STORE)||"{}")}}catch{state=fresh()}
- function save(){localStorage.setItem(STORE,JSON.stringify(state))}
- function regen(){const now=Date.now(),elapsed=Math.max(0,now-(state.lastEnergyAt||now));const add=Math.floor(elapsed/6000);if(add){state.energy=Math.min(MAX,state.energy+add);state.lastEnergyAt+=add*6000;save()}}
- function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2300)}
+
+ try{
+  state={...fresh(),...JSON.parse(localStorage.getItem(STORE)||"{}")};
+ }catch{
+  state=fresh();
+ }
+
+ function save(){
+  localStorage.setItem(STORE,JSON.stringify(state));
+ }
+
+ function toast(msg){
+  const el=$("toast");
+  el.textContent=msg;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2300);
+ }
+
+ function regen(){
+  const now=Date.now();
+  const elapsed=Math.max(0,now-(state.lastEnergyAt||now));
+  const add=Math.floor(elapsed/6000);
+
+  if(add){
+   state.energy=Math.min(MAX,state.energy+add);
+   state.lastEnergyAt+=add*6000;
+   save();
+  }
+ }
 
  function render(){
   regen();
-  if(state.missionDay!==today()){state.missionDay=today();state.tapsToday=0;state.missionClaimed=false;save()}
+
+  if(state.missionDay!==today()){
+   state.missionDay=today();
+   state.tapsToday=0;
+   state.missionClaimed=false;
+   save();
+  }
+
   $("points").textContent=state.points.toLocaleString();
   $("energyStat").textContent=`${state.energy} / ${MAX}`;
   $("energyText").textContent=`${state.energy} / ${MAX}`;
@@ -65,10 +329,12 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
   $("streak").textContent=state.streak+" days";
   $("missionProgress").textContent=`Progress: ${state.tapsToday} / 100`;
   $("taskProgress").textContent=`Progress: ${state.tapsToday} / 100`;
+
   $("dailyBtn").disabled=state.lastDaily===today();
   $("dailyBtn").textContent=state.lastDaily===today()?"✓ CLAIMED TODAY":"▶ WATCH AD & CLAIM";
   $("dailyTitle").textContent=state.lastDaily===today()?"Today's reward claimed":"Claim today's reward";
   $("dailyDesc").textContent=state.lastDaily===today()?"Come back tomorrow for your next check-in.":"Watch a rewarded ad to unlock your daily points.";
+
   $("youPoints").textContent=state.points.toLocaleString();
   $("profilePoints").textContent=state.points.toLocaleString();
   $("profileStreak").textContent=state.streak+" days";
@@ -76,61 +342,91 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
   $("profileEnergy").textContent=state.energy;
  }
 
- document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  $(btn.dataset.page).classList.add("active");
-  window.scrollTo(0,0);
- }));
+ document.querySelectorAll(".nav button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+   btn.classList.add("active");
+
+   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+   $(btn.dataset.page).classList.add("active");
+
+   window.scrollTo(0,0);
+  });
+ });
 
  $("tap").addEventListener("click",()=>{
   regen();
-  if(state.energy<=0){toast("Energy depleted. It recharges over time.");return}
+
+  if(state.energy<=0){
+   toast("Energy depleted. It recharges over time.");
+   return;
+  }
+
   state.points++;
   state.energy--;
   state.tapsToday++;
+
   if(state.tapsToday>=100&&!state.missionClaimed){
    state.points+=1000;
    state.missionClaimed=true;
    toast("Mission completed! +1,000 points");
   }
+
   save();
   render();
  });
 
  async function showAd(){
   const id="PASTE_YOUR_ADSGRAM_REWARD_BLOCK_ID";
-  if(id.includes("PASTE_")){toast("Ads are not connected yet. We will set up AdsGram later.");return false}
-  if(!window.Adsgram?.init){toast("Adsgram SDK did not load.");return false}
+
+  if(id.includes("PASTE_")){
+   toast("Ads are not connected yet. We will set up AdsGram later.");
+   return false;
+  }
+
+  if(!window.Adsgram?.init){
+   toast("Adsgram SDK did not load.");
+   return false;
+  }
+
   try{
    const result=await window.Adsgram.init({blockId:id}).show();
    return result?.done===true;
-  }catch(e){return false}
+  }catch(e){
+   return false;
+  }
  }
 
  $("dailyBtn").addEventListener("click",async()=>{
   if(state.lastDaily===today())return;
+
   $("dailyBtn").disabled=true;
   const ok=await showAd();
+
   if(ok){
    state.streak=state.lastDaily===yesterday()?state.streak+1:1;
    state.lastDaily=today();
    state.points+=500;
    save();
    toast("Reward unlocked: +500 points!");
-  }else toast("No completed ad. No points added.");
+  }else{
+   toast("No completed ad. No points added.");
+  }
+
   render();
  });
 
  const user=tg?.initDataUnsafe?.user;
+
  if(user){
   const name=[user.first_name,user.last_name].filter(Boolean).join(" ")||"Telegram player";
+
   $("profileName").textContent=name;
   $("profileHandle").textContent=user.username?"@"+user.username:"Telegram user";
   $("youName").textContent=name;
   $("youAvatar").textContent=(user.first_name||"U")[0].toUpperCase();
   $("profileAvatar").textContent=(user.first_name||"U")[0].toUpperCase();
+
   if(user.photo_url){
    const a=$("profileAvatar");
    a.style.backgroundImage=`url("${user.photo_url}")`;
@@ -139,7 +435,6 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
   }
  }
 
- const botUsername="TapRushGobalBot";
  let link="Open TapRush inside Telegram to generate your invite link.";
  $("refLink").textContent=link;
 
@@ -169,10 +464,20 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
     throw new Error("Player referral code missing");
    }
 
-   link=`https://t.me/${botUsername}?start=${encodeURIComponent(player.referral_code)}`;
+   // Telegram Mini App referral link
+   link=`https://t.me/${BOT_USERNAME}?startapp=${encodeURIComponent(player.referral_code)}`;
+
    $("refLink").textContent=link;
-   toast("Telegram account connected!");
+
+   if(data.referral?.rewardReceived){
+    toast("Your inviter received "+REFERRAL_REWARD+" referral points!");
+   }else{
+    toast("Telegram account connected!");
+   }
+
    console.log("TapRush player registered:",player.telegram_id);
+   console.log("Referral result:",data.referral);
+
   }catch(error){
    console.error("TapRush registration error:",error);
    $("refLink").textContent="Account connection failed. Reopen TapRush and try again.";
@@ -183,7 +488,11 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
  registerPlayer();
 
  $("copyRef").addEventListener("click",async()=>{
-  if(!link.startsWith("https://")){toast("Connect your Telegram account first.");return}
+  if(!link.startsWith("https://")){
+   toast("Connect your Telegram account first.");
+   return;
+  }
+
   try{
    await navigator.clipboard.writeText(link);
    toast("Invite link copied");
@@ -193,12 +502,25 @@ button{font:inherit;color:inherit}.wrap{max-width:480px;margin:auto;padding:16px
  });
 
  $("shareRef").addEventListener("click",()=>{
-  if(!link.startsWith("https://")){toast("Connect your Telegram account first.");return}
+  if(!link.startsWith("https://")){
+   toast("Connect your Telegram account first.");
+   return;
+  }
+
   if(tg?.openTelegramLink){
-   tg.openTelegramLink("https://t.me/share/url?url="+encodeURIComponent(link)+"&text="+encodeURIComponent("Join me on TapRush!"));
+   tg.openTelegramLink(
+    "https://t.me/share/url?url="+encodeURIComponent(link)+
+    "&text="+encodeURIComponent("Join me on TapRush!")
+   );
   }else if(navigator.share){
-   navigator.share({title:"TapRush",text:"Join me on TapRush!",url:link}).catch(()=>{});
-  }else toast("Sharing is unavailable in this browser");
+   navigator.share({
+    title:"TapRush",
+    text:"Join me on TapRush!",
+    url:link
+   }).catch(()=>{});
+  }else{
+   toast("Sharing is unavailable in this browser");
+  }
  });
 
  render();

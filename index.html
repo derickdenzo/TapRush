@@ -65,6 +65,8 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
 .token-box{background:#0c1020;border:1px solid var(--line);border-radius:14px;padding:12px}
 .token-box strong{display:block;font-size:16px;color:var(--gold);margin-top:5px}
 .token-box span{font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.08em}
+.ad-card{border:1px solid #9275ff55;background:linear-gradient(145deg,#211e42,#111426)}
+.ad-icon{width:43px;height:43px;border-radius:13px;background:#9275ff25;display:grid;place-items:center;font-size:21px}
 </style>
 </head>
 <body>
@@ -136,6 +138,7 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
     <h2>Every tap moves you forward.</h2>
     <p>Complete daily activities, keep your streak alive and improve your season standing.</p>
   </div>
+
   <div class="section-title">Your tasks</div>
   <div class="card">
     <div class="task">
@@ -151,6 +154,32 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
       <button class="action secondary" onclick="showPage('friends')">Invite</button>
     </div>
   </div>
+
+  <!-- OPTIONAL REWARDED AD PLACEMENT -->
+  <div class="card ad-card" id="rewardedAdTask">
+    <div class="row">
+      <div class="ad-icon">▶️</div>
+      <span class="pill">OPTIONAL</span>
+    </div>
+    <h3 style="margin:14px 0 6px">Watch a rewarded ad</h3>
+    <p class="notice">
+      Watch an optional advertisement when this feature becomes available.
+      You can continue playing TapRush without watching ads.
+    </p>
+    <div class="row" style="margin-top:15px">
+      <div>
+        <strong style="color:var(--gold)">Coming soon</strong>
+        <div class="notice">Ad rewards are not active yet.</div>
+      </div>
+      <button class="action secondary" id="watchAdButton" disabled>Unavailable</button>
+    </div>
+    <p class="notice" id="adRewardNotice">
+      This feature will be activated after advertising approval and secure
+      reward verification. No points are awarded by this placeholder.
+    </p>
+  </div>
+  <!-- END REWARDED AD PLACEMENT -->
+
   <p class="notice">Rewards are virtual TapRush points. They are not cash or guaranteed airdrop tokens.</p>
 </section>
 

@@ -4,49 +4,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#100d20">
+<meta name="theme-color" content="#080914">
 <title>TapRush — Tap. Collect. Rise.</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--bg:#100d20;--panel:#1c1731;--panel2:#251d3e;--gold:#ffc857;--purple:#9b78ff;--muted:#aaa2c4;--white:#fff}
+:root{color-scheme:dark;--bg:#080914;--panel:#111426;--panel2:#191d34;--gold:#c9f36a;--purple:#9275ff;--muted:#9299b7;--white:#f7f8ff;--line:rgba(177,185,255,.13);--cyan:#63e5e5}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif;padding-bottom:85px}
+body{margin:0;padding-bottom:85px;background:radial-gradient(ellipse at 50% -15%,#24204c 0%,#0b0c19 48%,#080914 100%);font-family:Inter,system-ui,sans-serif;color:var(--white)}
 header{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:23px;font-weight:900;letter-spacing:.5px}.logo span{color:var(--gold)}
 .small{font-size:12px;color:var(--muted)}
 .container{padding:10px 16px;max-width:520px;margin:auto}
-.card{background:var(--panel);border:1px solid #33294e;border-radius:18px;padding:17px;margin-bottom:14px}
+.card{background:linear-gradient(145deg,#191d34,#0f1222);border:1px solid var(--line);border-radius:22px;padding:17px;margin-bottom:14px;box-shadow:0 12px 34px #0003}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .label{color:var(--muted);font-size:12px}
-.points{font-size:34px;font-weight:900;color:var(--gold);margin:7px 0}
-.energy{font-weight:bold;color:#9de6bc}
-.bar{height:9px;background:#382e50;border-radius:20px;overflow:hidden;margin-top:9px}
-.bar div{height:100%;background:linear-gradient(90deg,#9b78ff,#ffc857);width:100%;transition:width .2s}
+.points{font-size:40px;font-weight:900;color:var(--gold);margin:7px 0}
+.energy{font-weight:bold;color:var(--cyan)}
+.bar{height:9px;background:#292d48;border-radius:20px;overflow:hidden;margin-top:9px}
+.bar div{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--gold));width:100%;transition:width .2s}
 .tap-area{text-align:center;padding:18px 0 10px}
-.tap-button{width:190px;height:190px;border-radius:50%;border:7px solid #7554c7;background:radial-gradient(circle at 35% 30%,#b79aff,#7048c5 65%,#412879);box-shadow:0 0 35px #7950c866,inset 0 0 18px #ffffff33;color:white;font-size:29px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.tap-button{width:190px;height:190px;border-radius:50%;border:1px solid #c8b9ff88;background:radial-gradient(circle at 35% 27%,#a99aff,#7556db 42%,#30245f 76%,#19142f);box-shadow:0 0 0 9px #9275ff12,0 0 55px #8064ff55,inset 0 2px 20px #fff5;color:white;font-size:29px;font-weight:900;cursor:pointer;touch-action:manipulation}
 .tap-button:active{transform:scale(.96)}
 .tap-button:disabled{opacity:.5}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.stat{background:var(--panel2);padding:12px 7px;border-radius:13px;text-align:center}
+.stat{background:linear-gradient(145deg,#202541,#171b30);border:1px solid var(--line);padding:12px 7px;border-radius:15px;text-align:center}
 .stat strong{display:block;font-size:18px;margin-bottom:4px}
 .stat span{font-size:10px;color:var(--muted)}
-.section-title{font-size:17px;font-weight:800;margin:5px 0 13px}
+.section-title{font-size:17px;font-weight:900;letter-spacing:-.3px;margin:5px 0 13px}
 button{font-family:inherit}
-.action{border:0;border-radius:12px;background:var(--gold);color:#21162c;font-weight:800;padding:13px 16px;cursor:pointer}
-.action.secondary{background:#49376d;color:white}
+.action{border:0;border-radius:13px;background:var(--gold);color:#141927;font-weight:800;padding:13px 16px;cursor:pointer}
+.action.secondary{background:#282b49;color:#fff;border:1px solid #7770b955}
 .action:disabled{opacity:.45;cursor:not-allowed}
 .full{width:100%}
-.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:9px}
-.task{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #382e50}
+.notice{font-size:11px;color:var(--muted);line-height:1.55;margin-top:9px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
 .task:last-child{border:0}
 .task strong{display:block;font-size:14px;margin-bottom:5px}
 .task p{margin:0;font-size:11px;color:var(--muted)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#171229;border-top:1px solid #33294e;display:flex;justify-content:space-around;padding:10px 3px calc(10px + env(safe-area-inset-bottom));z-index:10}
-.nav button{background:none;border:0;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:18%;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,13,27,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 3px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.nav button{background:none;border:0;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:15%;cursor:pointer}
 .nav button.active{color:var(--gold)}
 .nav b{font-size:19px}
 .page{display:none}.page.active{display:block}
-.leader{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #382e50}
+.leader{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
 .leader:last-child{border:0}
 .rank{width:29px;height:29px;border-radius:9px;background:#382e50;display:grid;place-items:center;font-weight:bold;color:var(--gold)}
 .person{flex:1;min-width:0}.person strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis}
@@ -56,6 +56,15 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
 .profile-icon{width:52px;height:52px;border-radius:50%;background:#49376d;display:grid;place-items:center;font-size:23px}
 .empty{text-align:center;color:var(--muted);padding:25px 5px;font-size:13px}
 #toast{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#332653;color:white;padding:11px 17px;border-radius:12px;font-size:13px;display:none;z-index:20;max-width:90%;text-align:center}
+.hero{border:1px solid #9d8bff45;background:radial-gradient(ellipse at 90% 0%,#5843a455,transparent 55%),linear-gradient(140deg,#211e42,#121629 65%);border-radius:24px;padding:19px;margin-bottom:14px;position:relative;overflow:hidden}
+.eyebrow{color:var(--gold);font-size:9px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
+.hero h2{font-size:27px;line-height:1.05;letter-spacing:-1px;margin:10px 0 7px}
+.hero p{color:#b6bad2;font-size:11px;line-height:1.55;margin:0;max-width:310px}
+.pill{display:inline-block;background:#c9f36a18;border:1px solid #c9f36a44;color:var(--gold);border-radius:99px;padding:6px 9px;font-size:9px;font-weight:900;letter-spacing:.08em}
+.token-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:13px}
+.token-box{background:#0c1020;border:1px solid var(--line);border-radius:14px;padding:12px}
+.token-box strong{display:block;font-size:16px;color:var(--gold);margin-top:5px}
+.token-box span{font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.08em}
 </style>
 </head>
 <body>
@@ -72,116 +81,163 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
 
 <div class="container">
 
-  <section class="page active" id="home">
-    <div class="card">
-      <div class="label">YOUR TOTAL POINTS</div>
-      <div class="points" id="points">0</div>
-      <div class="row">
-        <span class="label">⚡ Energy</span>
-        <strong class="energy" id="energy">500 / 500</strong>
-      </div>
-      <div class="bar"><div id="energybar"></div></div>
-      <div class="notice">Energy regenerates automatically over time.</div>
-    </div>
+<section class="page active" id="home">
+  <div class="hero">
+    <div class="eyebrow">SEASON 01 · 90 DAYS</div>
+    <h2>Tap your way to the top.</h2>
+    <p>Build your score, finish missions and climb the global TapRush ranks.</p>
+    <div style="margin-top:13px"><span class="pill">⚡ TAP · COLLECT · RISE</span></div>
+  </div>
 
-    <div class="tap-area">
-      <button class="tap-button" id="tapButton" disabled>LOADING</button>
-      <p class="small" id="tapStatus">Connecting to TapRush...</p>
+  <div class="card">
+    <div class="label">YOUR TOTAL POINTS</div>
+    <div class="points" id="points">0</div>
+    <div class="row">
+      <span class="label">⚡ Energy</span>
+      <strong class="energy" id="energy">500 / 500</strong>
     </div>
+    <div class="bar"><div id="energybar"></div></div>
+    <div class="notice">Energy regenerates automatically over time.</div>
+  </div>
 
+  <div class="tap-area">
+    <button class="tap-button" id="tapButton" disabled>LOADING</button>
+    <p class="small" id="tapStatus">Connecting to TapRush...</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong id="streak">0</strong><span>DAY STREAK 🔥</span></div>
+    <div class="stat"><strong id="taps">0/100</strong><span>DAILY TAPS</span></div>
+    <div class="stat"><strong id="mission">0</strong><span>MISSIONS CLAIMED</span></div>
+  </div>
+
+  <div class="card" style="margin-top:15px">
+    <div class="section-title">Daily check-in 🎁</div>
+    <div class="row">
+      <div><strong>+500 points</strong><div class="notice">Claim once every day.</div></div>
+      <button class="action" id="dailyButton" disabled>Claim</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Daily mission 🎯</div>
+    <div class="row">
+      <div><strong>Complete 100 taps</strong><div class="notice">Earn 1,000 bonus points.</div></div>
+      <strong style="color:var(--gold)">+1,000</strong>
+    </div>
+    <div class="bar"><div id="missionbar"></div></div>
+    <div class="notice" id="missionText">0 of 100 taps completed</div>
+  </div>
+</section>
+
+<section class="page" id="tasks">
+  <div class="hero">
+    <div class="eyebrow">MISSIONS & PROGRESS</div>
+    <h2>Every tap moves you forward.</h2>
+    <p>Complete daily activities, keep your streak alive and improve your season standing.</p>
+  </div>
+  <div class="section-title">Your tasks</div>
+  <div class="card">
+    <div class="task">
+      <div><strong>Daily check-in</strong><p>Claim your daily 500-point reward.</p></div>
+      <button class="action" id="taskDaily">Claim</button>
+    </div>
+    <div class="task">
+      <div><strong>Tap 100 times</strong><p>Complete your daily tapping mission.</p></div>
+      <strong style="color:var(--gold)">+1,000</strong>
+    </div>
+    <div class="task">
+      <div><strong>Invite a friend</strong><p>Earn 2,000 points for a successful referral.</p></div>
+      <button class="action secondary" onclick="showPage('friends')">Invite</button>
+    </div>
+  </div>
+  <p class="notice">Rewards are virtual TapRush points. They are not cash or guaranteed airdrop tokens.</p>
+</section>
+
+<section class="page" id="leaderboard">
+  <div class="hero">
+    <div class="eyebrow">GLOBAL COMPETITION</div>
+    <h2>Make your mark.</h2>
+    <p>See how your score compares with players around the world.</p>
+  </div>
+  <div class="section-title">🏆 Global leaderboard</div>
+  <div class="card">
+    <div class="row"><strong>Top players</strong><span class="small">Live database rankings</span></div>
+    <div id="leaderList"><div class="empty">Loading leaderboard...</div></div>
+    <button class="action secondary full" style="margin-top:12px" onclick="loadLeaderboard()">Refresh rankings</button>
+  </div>
+</section>
+
+<section class="page" id="friends">
+  <div class="hero">
+    <div class="eyebrow">GROW THE COMMUNITY</div>
+    <h2>Bring your crew.</h2>
+    <p>Invite friends to join the TapRush season and track your referral progress.</p>
+  </div>
+  <div class="section-title">👥 Invite friends</div>
+  <div class="card">
+    <div class="section-title">Your referral link</div>
+    <p class="notice">Share your personal link. When a new player joins through it, you receive 2,000 points.</p>
+    <input id="refLink" readonly value="Loading your referral link...">
+    <button class="action full" onclick="copyReferral()">Copy referral link</button>
+    <button class="action secondary full" style="margin-top:9px" onclick="shareReferral()">Share with friends</button>
+  </div>
+  <div class="card">
+    <div class="section-title">Referral statistics</div>
     <div class="stats">
-      <div class="stat"><strong id="streak">0</strong><span>DAY STREAK 🔥</span></div>
-      <div class="stat"><strong id="taps">0/100</strong><span>DAILY TAPS</span></div>
-      <div class="stat"><strong id="mission">0</strong><span>MISSIONS CLAIMED</span></div>
+      <div class="stat"><strong id="refTotal">0</strong><span>INVITES</span></div>
+      <div class="stat"><strong id="refSuccess">0</strong><span>SUCCESSFUL</span></div>
+      <div class="stat"><strong id="refPoints">0</strong><span>POINTS EARNED</span></div>
     </div>
+    <p class="notice">Statistics update when a new player registers through your referral link.</p>
+    <button class="action secondary full" style="margin-top:12px" onclick="loadReferralStats()">Refresh statistics</button>
+  </div>
+</section>
 
-    <div class="card" style="margin-top:15px">
-      <div class="section-title">Daily check-in 🎁</div>
-      <div class="row">
-        <div><strong>+500 points</strong><div class="notice">Claim once every day.</div></div>
-        <button class="action" id="dailyButton" disabled>Claim</button>
-      </div>
+<section class="page" id="airdrop">
+  <div class="hero">
+    <div class="eyebrow">TAPRUSH REWARDS · PLANNED TOKEN</div>
+    <h2>Meet $RUSH.</h2>
+    <p>TapRush is preparing a 90-day player rewards season. Collect eligible points and follow official announcements for distribution details.</p>
+  </div>
+  <div class="card">
+    <div class="row"><strong>Proposed token overview</strong><span class="pill">PLANNED</span></div>
+    <div class="token-grid">
+      <div class="token-box"><span>MAXIMUM SUPPLY</span><strong>250,000,000</strong></div>
+      <div class="token-box"><span>PLAYER ALLOCATION</span><strong>75%</strong></div>
+      <div class="token-box"><span>PLAYER POOL</span><strong>187,500,000</strong></div>
+      <div class="token-box"><span>SPONSOR ALLOCATION</span><strong>25%</strong></div>
     </div>
+    <p class="notice">These are proposed tokenomics, not deployed tokens. The smart contract, contract address, final eligibility rules and distribution arrangements are still being prepared. Points are not tokens and have no guaranteed cash value.</p>
+  </div>
+  <div class="card">
+    <div class="section-title">How the season works</div>
+    <div class="task"><div><strong>1. Play and collect</strong><p>Build your TapRush points through eligible activity.</p></div><span>⚡</span></div>
+    <div class="task"><div><strong>2. Complete the season</strong><p>Stay active during the planned 90-day season.</p></div><span>🏁</span></div>
+    <div class="task"><div><strong>3. Official snapshot</strong><p>Final distribution rules and snapshot date will be announced.</p></div><span>📸</span></div>
+    <div class="task"><div><strong>4. Distribution details</strong><p>Contract and claim information will be published after deployment.</p></div><span>🪙</span></div>
+  </div>
+</section>
 
-    <div class="card">
-      <div class="section-title">Daily mission 🎯</div>
-      <div class="row">
-        <div><strong>Complete 100 taps</strong><div class="notice">Earn 1,000 bonus points.</div></div>
-        <strong style="color:var(--gold)">+1,000</strong>
-      </div>
-      <div class="bar"><div id="missionbar"></div></div>
-      <div class="notice" id="missionText">0 of 100 taps completed</div>
+<section class="page" id="profile">
+  <div class="card">
+    <div class="row">
+      <div><div class="label">PLAYER PROFILE</div><h2 id="playerName">Player</h2><div class="small" id="playerUsername"></div></div>
+      <div class="profile-icon">⚡</div>
     </div>
-  </section>
-
-  <section class="page" id="tasks">
-    <div class="section-title">Your tasks</div>
-    <div class="card">
-      <div class="task">
-        <div><strong>Daily check-in</strong><p>Claim your daily 500-point reward.</p></div>
-        <button class="action" id="taskDaily">Claim</button>
-      </div>
-      <div class="task">
-        <div><strong>Tap 100 times</strong><p>Complete your daily tapping mission.</p></div>
-        <strong style="color:var(--gold)">+1,000</strong>
-      </div>
-      <div class="task">
-        <div><strong>Invite a friend</strong><p>Earn 2,000 points for a successful referral.</p></div>
-        <button class="action secondary" onclick="showPage('friends')">Invite</button>
-      </div>
-    </div>
-    <p class="notice">Rewards are virtual TapRush points. They are not cash or guaranteed airdrop tokens.</p>
-  </section>
-
-  <section class="page" id="leaderboard">
-    <div class="section-title">🏆 Global leaderboard</div>
-    <div class="card">
-      <div class="row"><strong>Top players</strong><span class="small">Live database rankings</span></div>
-      <div id="leaderList"><div class="empty">Loading leaderboard...</div></div>
-      <button class="action secondary full" style="margin-top:12px" onclick="loadLeaderboard()">Refresh rankings</button>
-    </div>
-  </section>
-
-  <section class="page" id="friends">
-    <div class="section-title">👥 Invite friends</div>
-    <div class="card">
-      <div class="section-title">Your referral link</div>
-      <p class="notice">Share your personal link. When a new player joins through it, you receive 2,000 points.</p>
-      <input id="refLink" readonly value="Loading your referral link...">
-      <button class="action full" onclick="copyReferral()">Copy referral link</button>
-      <button class="action secondary full" style="margin-top:9px" onclick="shareReferral()">Share with friends</button>
-    </div>
-    <div class="card">
-      <div class="section-title">Referral statistics</div>
-      <div class="stats">
-        <div class="stat"><strong id="refTotal">0</strong><span>INVITES</span></div>
-        <div class="stat"><strong id="refSuccess">0</strong><span>SUCCESSFUL</span></div>
-        <div class="stat"><strong id="refPoints">0</strong><span>POINTS EARNED</span></div>
-      </div>
-      <p class="notice">Statistics update when a new player registers through your referral link.</p>
-      <button class="action secondary full" style="margin-top:12px" onclick="loadReferralStats()">Refresh statistics</button>
-    </div>
-  </section>
-
-  <section class="page" id="profile">
-    <div class="card">
-      <div class="row">
-        <div><div class="label">PLAYER PROFILE</div><h2 id="playerName">Player</h2><div class="small" id="playerUsername"></div></div>
-        <div class="profile-icon">⚡</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="task"><span class="label">Total points</span><strong id="profilePoints">0</strong></div>
-      <div class="task"><span class="label">Current energy</span><strong id="profileEnergy">500</strong></div>
-      <div class="task"><span class="label">Daily streak</span><strong id="profileStreak">0</strong></div>
-      <div class="task"><span class="label">Today's taps</span><strong id="profileTaps">0</strong></div>
-    </div>
-    <div class="card">
-      <strong>About TapRush</strong>
-      <p class="notice">TapRush is a points-based mini game. Your player progress is stored on our server so it can be retrieved when you return using your Telegram account.</p>
-      <button class="action secondary full" onclick="refreshAll()">Refresh my account</button>
-    </div>
-  </section>
+  </div>
+  <div class="card">
+    <div class="task"><span class="label">Total points</span><strong id="profilePoints">0</strong></div>
+    <div class="task"><span class="label">Current energy</span><strong id="profileEnergy">500</strong></div>
+    <div class="task"><span class="label">Daily streak</span><strong id="profileStreak">0</strong></div>
+    <div class="task"><span class="label">Today's taps</span><strong id="profileTaps">0</strong></div>
+  </div>
+  <div class="card">
+    <strong>About TapRush</strong>
+    <p class="notice">TapRush is a points-based mini game. Your player progress is stored on our server so it can be retrieved when you return using your Telegram account.</p>
+    <button class="action secondary full" onclick="refreshAll()">Refresh my account</button>
+  </div>
+</section>
 
 </div>
 
@@ -190,6 +246,7 @@ input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-
   <button data-page="tasks" onclick="showPage('tasks')"><b>✓</b>Tasks</button>
   <button data-page="leaderboard" onclick="showPage('leaderboard')"><b>🏆</b>Ranks</button>
   <button data-page="friends" onclick="showPage('friends')"><b>♧</b>Friends</button>
+  <button data-page="airdrop" onclick="showPage('airdrop')"><b>✦</b>$RUSH</button>
   <button data-page="profile" onclick="showPage('profile')"><b>◉</b>Profile</button>
 </nav>
 
@@ -320,7 +377,6 @@ async function refreshAll() {
 function tap() {
   if (!player || Number(player.energy) < 1) return;
 
-  // Queue taps and send batches to the server.
   if (Number(player.energy) - tapQueue <= 0) {
     toast("Not enough energy. Wait for regeneration.");
     return;
@@ -370,9 +426,7 @@ async function pumpTaps() {
 
   pumping = false;
 
-  if (tapQueue > 0) {
-    pumpTaps();
-  }
+  if (tapQueue > 0) pumpTaps();
 }
 
 document.getElementById("tapButton").addEventListener("click", tap);
@@ -489,13 +543,12 @@ async function startApp() {
     if (tg) {
       tg.ready();
       tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor("#100d20");
-      if (tg.setBackgroundColor) tg.setBackgroundColor("#100d20");
+      if (tg.setHeaderColor) tg.setHeaderColor("#0b0c19");
+      if (tg.setBackgroundColor) tg.setBackgroundColor("#0b0c19");
     }
 
     await register();
 
-    // Refresh server-backed energy and progress periodically.
     setInterval(async () => {
       if (!pumping && tapQueue === 0) {
         try { await refreshState(); } catch {}

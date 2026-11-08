@@ -1,5 +1,220 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#100d20">
+<title>TapRush — Tap. Collect. Rise.</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#100d20;--panel:#1c1731;--panel2:#251d3e;--gold:#ffc857;--purple:#9b78ff;--muted:#aaa2c4;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif;padding-bottom:85px}
+header{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:900;letter-spacing:.5px}.logo span{color:var(--gold)}
+.small{font-size:12px;color:var(--muted)}
+.container{padding:10px 16px;max-width:520px;margin:auto}
+.card{background:var(--panel);border:1px solid #33294e;border-radius:18px;padding:17px;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.label{color:var(--muted);font-size:12px}
+.points{font-size:34px;font-weight:900;color:var(--gold);margin:7px 0}
+.energy{font-weight:bold;color:#9de6bc}
+.bar{height:9px;background:#382e50;border-radius:20px;overflow:hidden;margin-top:9px}
+.bar div{height:100%;background:linear-gradient(90deg,#9b78ff,#ffc857);width:100%;transition:width .2s}
+.tap-area{text-align:center;padding:18px 0 10px}
+.tap-button{width:190px;height:190px;border-radius:50%;border:7px solid #7554c7;background:radial-gradient(circle at 35% 30%,#b79aff,#7048c5 65%,#412879);box-shadow:0 0 35px #7950c866,inset 0 0 18px #ffffff33;color:white;font-size:29px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.tap-button:active{transform:scale(.96)}
+.tap-button:disabled{opacity:.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--panel2);padding:12px 7px;border-radius:13px;text-align:center}
+.stat strong{display:block;font-size:18px;margin-bottom:4px}
+.stat span{font-size:10px;color:var(--muted)}
+.section-title{font-size:17px;font-weight:800;margin:5px 0 13px}
+button{font-family:inherit}
+.action{border:0;border-radius:12px;background:var(--gold);color:#21162c;font-weight:800;padding:13px 16px;cursor:pointer}
+.action.secondary{background:#49376d;color:white}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.full{width:100%}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:9px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #382e50}
+.task:last-child{border:0}
+.task strong{display:block;font-size:14px;margin-bottom:5px}
+.task p{margin:0;font-size:11px;color:var(--muted)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#171229;border-top:1px solid #33294e;display:flex;justify-content:space-around;padding:10px 3px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.nav button{background:none;border:0;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:18%;cursor:pointer}
+.nav button.active{color:var(--gold)}
+.nav b{font-size:19px}
+.page{display:none}.page.active{display:block}
+.leader{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #382e50}
+.leader:last-child{border:0}
+.rank{width:29px;height:29px;border-radius:9px;background:#382e50;display:grid;place-items:center;font-weight:bold;color:var(--gold)}
+.person{flex:1;min-width:0}.person strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+.person span{font-size:11px;color:var(--muted)}
+.score{font-weight:800;color:var(--gold);font-size:13px}
+input{width:100%;background:#100d20;color:white;border:1px solid #49376d;border-radius:10px;padding:12px;font-size:12px;margin:9px 0}
+.profile-icon{width:52px;height:52px;border-radius:50%;background:#49376d;display:grid;place-items:center;font-size:23px}
+.empty{text-align:center;color:var(--muted);padding:25px 5px;font-size:13px}
+#toast{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#332653;color:white;padding:11px 17px;border-radius:12px;font-size:13px;display:none;z-index:20;max-width:90%;text-align:center}
+.ad-icon{width:48px;height:48px;border-radius:13px;background:#49376d;display:grid;place-items:center;font-size:24px}
+.pill{font-size:10px;color:var(--gold);border:1px solid #6a5836;border-radius:20px;padding:7px 10px;font-weight:bold}
+.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.token-box{background:var(--panel2);border-radius:12px;padding:13px;text-align:center}
+.token-box span{display:block;font-size:10px;color:var(--muted);margin-bottom:7px}
+.token-box strong{font-size:19px;color:var(--gold)}
+#adsProgress{background:linear-gradient(90deg,#9b78ff,#ffc857)}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<header>
+  <div>
+    <div class="logo">TAP<span>RUSH</span> ⚡</div>
+    <div class="small">Tap. Collect. Rise.</div>
+  </div>
+  <div class="small" id="connection">Connecting...</div>
+</header>
+
+<div class="container">
+
+  <section class="page active" id="home">
+    <div class="card">
+      <div class="label">YOUR TOTAL POINTS</div>
+      <div class="points" id="points">0</div>
+      <div class="row">
+        <span class="label">⚡ Energy</span>
+        <strong class="energy" id="energy">500 / 500</strong>
+      </div>
+      <div class="bar"><div id="energybar"></div></div>
+      <div class="notice">Energy regenerates automatically over time.</div>
+    </div>
+
+    <div class="tap-area">
+      <button class="tap-button" id="tapButton" disabled>LOADING</button>
+      <p class="small" id="tapStatus">Connecting to TapRush...</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong id="streak">0</strong><span>DAY STREAK 🔥</span></div>
+      <div class="stat"><strong id="taps">0/100</strong><span>DAILY TAPS</span></div>
+      <div class="stat"><strong id="mission">0</strong><span>MISSIONS CLAIMED</span></div>
+    </div>
+
+    <div class="card" style="margin-top:15px">
+      <div class="section-title">Daily check-in 🎁</div>
+      <div class="row">
+        <div><strong>+500 points</strong><div class="notice">Claim once every day.</div></div>
+        <button class="action" id="dailyButton" disabled>Claim</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Daily mission 🎯</div>
+      <div class="row">
+        <div><strong>Complete 100 taps</strong><div class="notice">Earn 1,000 bonus points.</div></div>
+        <strong style="color:var(--gold)">+1,000</strong>
+      </div>
+      <div class="bar"><div id="missionbar"></div></div>
+      <div class="notice" id="missionText">0 of 100 taps completed</div>
+    </div>
+  </section>
+
+  <section class="page" id="tasks">
+    <div class="section-title">Your tasks</div>
+    <div class="card">
+      <div class="task">
+        <div><strong>Daily check-in</strong><p>Claim your daily 500-point reward.</p></div>
+        <button class="action" id="taskDaily">Claim</button>
+      </div>
+      <div class="task">
+        <div><strong>Tap 100 times</strong><p>Complete your daily tapping mission.</p></div>
+        <strong style="color:var(--gold)">+1,000</strong>
+      </div>
+      <div class="task">
+        <div><strong>Invite a friend</strong><p>Earn 2,000 points for a successful referral.</p></div>
+        <button class="action secondary" onclick="showPage('friends')">Invite</button>
+      </div>
+    </div>
+
+    <div class="card" id="rewardedAdTask">
+      <div class="row">
+        <div class="ad-icon">▶️</div>
+        <span class="pill">OPTIONAL</span>
+      </div>
+      <h3 style="margin:14px 0 6px">Watch a rewarded ad</h3>
+      <p class="notice">Watch an optional rewarded advertisement to earn bonus TapRush points. You can continue playing without watching ads.</p>
+    </div>
+
+    <p class="notice">Rewards are virtual TapRush points. They are not cash or guaranteed airdrop tokens.</p>
+  </section>
+
+  <section class="page" id="leaderboard">
+    <div class="section-title">🏆 Global leaderboard</div>
+    <div class="card">
+      <div class="row"><strong>Top players</strong><span class="small">Live database rankings</span></div>
+      <div id="leaderList"><div class="empty">Loading leaderboard...</div></div>
+      <button class="action secondary full" style="margin-top:12px" onclick="loadLeaderboard()">Refresh rankings</button>
+    </div>
+  </section>
+
+  <section class="page" id="friends">
+    <div class="section-title">👥 Invite friends</div>
+    <div class="card">
+      <div class="section-title">Your referral link</div>
+      <p class="notice">Share your personal link. When a new player joins through it, you receive 2,000 points.</p>
+      <input id="refLink" readonly value="Loading your referral link...">
+      <button class="action full" onclick="copyReferral()">Copy referral link</button>
+      <button class="action secondary full" style="margin-top:9px" onclick="shareReferral()">Share with friends</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Referral statistics</div>
+      <div class="stats">
+        <div class="stat"><strong id="refTotal">0</strong><span>INVITES</span></div>
+        <div class="stat"><strong id="refSuccess">0</strong><span>SUCCESSFUL</span></div>
+        <div class="stat"><strong id="refPoints">0</strong><span>POINTS EARNED</span></div>
+      </div>
+      <p class="notice">Statistics update when a new player registers through your referral link.</p>
+      <button class="action secondary full" style="margin-top:12px" onclick="loadReferralStats()">Refresh statistics</button>
+    </div>
+  </section>
+
+  <section class="page" id="profile">
+    <div class="card">
+      <div class="row">
+        <div><div class="label">PLAYER PROFILE</div><h2 id="playerName">Player</h2><div class="small" id="playerUsername"></div></div>
+        <div class="profile-icon">⚡</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="task"><span class="label">Total points</span><strong id="profilePoints">0</strong></div>
+      <div class="task"><span class="label">Current energy</span><strong id="profileEnergy">500</strong></div>
+      <div class="task"><span class="label">Daily streak</span><strong id="profileStreak">0</strong></div>
+      <div class="task"><span class="label">Today's taps</span><strong id="profileTaps">0</strong></div>
+    </div>
+    <div class="card">
+      <strong>About TapRush</strong>
+      <p class="notice">TapRush is a points-based mini game. Your player progress is stored on our server so it can be retrieved when you return using your Telegram account.</p>
+      <button class="action secondary full" onclick="refreshAll()">Refresh my account</button>
+    </div>
+  </section>
+
+</div>
+
+<nav class="nav">
+  <button class="active" data-page="home" onclick="showPage('home')"><b>⌂</b>Home</button>
+  <button data-page="tasks" onclick="showPage('tasks')"><b>✓</b>Tasks</button>
+  <button data-page="leaderboard" onclick="showPage('leaderboard')"><b>🏆</b>Ranks</button>
+  <button data-page="friends" onclick="showPage('friends')"><b>♧</b>Friends</button>
+  <button data-page="profile" onclick="showPage('profile')"><b>◉</b>Profile</button>
+</nav>
+
 <script>
+/* =========================
+   TAPRUSH CONFIGURATION
+========================= */
+
 const API = "https://taprush-api.derickainamani.workers.dev";
 const BOT_USERNAME = "TapRushGobalBot";
 
@@ -18,7 +233,11 @@ let pumping = false;
 let lastTapSent = 0;
 let adBusy = false;
 let adCount = 0;
-let adRank = null;
+let adCountKnown = false;
+
+/* =========================
+   GENERAL HELPERS
+========================= */
 
 function toast(message) {
   const el = document.getElementById("toast");
@@ -39,12 +258,12 @@ async function api(path, method = "GET", data = {}) {
   }
 
   const response = await fetch(API + path, options);
-  let result;
 
+  let result;
   try {
     result = await response.json();
   } catch {
-    throw new Error("Invalid server response.");
+    throw new Error("The server returned an invalid response.");
   }
 
   if (!response.ok || result.success === false) {
@@ -82,11 +301,10 @@ function updateUI() {
   const claimed = Number(player.mission_claimed || 0);
 
   document.getElementById("points").textContent = number(points);
-  document.getElementById("energy").textContent =
-    `${energy} / 500`;
+  document.getElementById("energy").textContent = `${energy} / 500`;
 
   document.getElementById("energybar").style.width =
-    (energy / 500 * 100) + "%";
+    Math.max(0, Math.min(100, energy / 500 * 100)) + "%";
 
   document.getElementById("streak").textContent = streak;
   document.getElementById("taps").textContent = `${taps}/100`;
@@ -134,7 +352,7 @@ function updateUI() {
 
 async function register() {
   if (!tg || !tg.initData) {
-    throw new Error("Please open TapRush from Telegram.");
+    throw new Error("Please open TapRush from its Telegram bot.");
   }
 
   initData = tg.initData;
@@ -153,6 +371,7 @@ async function register() {
   document.getElementById("connection").style.color = "#9de6bc";
 
   await refreshState();
+
   await Promise.all([
     loadLeaderboard(),
     loadReferralStats(),
@@ -257,7 +476,8 @@ async function pumpTaps() {
   if (tapQueue > 0) pumpTaps();
 }
 
-document.getElementById("tapButton").addEventListener("click", tap);
+document.getElementById("tapButton")
+  .addEventListener("click", tap);
 
 /* =========================
    DAILY CHECK-IN
@@ -314,18 +534,18 @@ function createAdInterface() {
     <h3 style="margin:14px 0 6px">Watch an advertisement</h3>
 
     <p class="notice">
-      Earn 100 TapRush points for each successfully completed
-      rewarded advertisement. Watching ads is optional.
+      Earn ${AD_REWARD} TapRush points for each successfully
+      completed rewarded advertisement. Watching ads is optional.
     </p>
 
     <div class="token-grid">
       <div class="token-box">
         <span>REWARD PER AD</span>
-        <strong>+100</strong>
+        <strong>+${number(AD_REWARD)}</strong>
       </div>
       <div class="token-box">
         <span>ADS WATCHED TODAY</span>
-        <strong id="adsToday">0 / 50</strong>
+        <strong id="adsToday">0 / ${DAILY_AD_LIMIT}</strong>
       </div>
     </div>
 
@@ -352,8 +572,9 @@ function createAdInterface() {
     </button>
 
     <p class="notice">
-      Maximum 50 rewarded advertisements per day across both
-      networks combined. Incomplete advertisements earn no points.
+      Maximum ${DAILY_AD_LIMIT} rewarded advertisements per day
+      across both networks combined. Incomplete advertisements
+      earn no points.
     </p>
   `;
 
@@ -372,15 +593,6 @@ function setAdMessage(message) {
   if (el) el.textContent = message;
 }
 
-function setAdButtonsDisabled(disabled) {
-  const ids = ["adsgramButton", "adsunButton"];
-
-  ids.forEach(id => {
-    const button = document.getElementById(id);
-    if (button) button.disabled = disabled;
-  });
-}
-
 function getAdCount(result) {
   return Number(
     result.ads_today ??
@@ -394,6 +606,7 @@ function getAdCount(result) {
 
 function updateAdDisplay(result) {
   adCount = getAdCount(result);
+  adCountKnown = true;
 
   const remaining = Math.max(0, DAILY_AD_LIMIT - adCount);
   const countEl = document.getElementById("adsToday");
@@ -428,6 +641,7 @@ async function loadAdStatus() {
     return result;
   } catch (error) {
     console.log("Ad status:", error.message);
+    setAdMessage("Could not load ad progress. Please refresh.");
     return null;
   }
 }
@@ -436,16 +650,17 @@ async function loadMyRank() {
   try {
     const result = await api("/my-rank", "POST");
 
-    adRank =
+    const rank =
       result.rank ??
       result.player_rank ??
       result.position ??
       null;
 
     const rankEl = document.getElementById("myRank");
+
     if (rankEl) {
       rankEl.textContent =
-        adRank ? "#" + number(adRank) : "Not ranked yet";
+        rank ? "#" + number(rank) : "Not ranked yet";
     }
 
   } catch (error) {
@@ -453,8 +668,58 @@ async function loadMyRank() {
   }
 }
 
-async function loadSDK(url, globalName) {
-  if (window[globalName]) return window[globalName];
+function setAdButtonsDisabled(disabled) {
+  ["adsgramButton", "adsunButton"].forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.disabled = disabled;
+  });
+}
+
+async function beginAd() {
+  if (adBusy) {
+    throw new Error("An advertisement is already running.");
+  }
+
+  const status = await loadAdStatus();
+
+  if (!status) {
+    throw new Error("Could not verify your daily ad limit. Try again.");
+  }
+
+  if (getAdCount(status) >= DAILY_AD_LIMIT) {
+    throw new Error("You have reached today's 50-ad limit.");
+  }
+
+  adBusy = true;
+  setAdButtonsDisabled(true);
+
+  return getAdCount(status);
+}
+
+async function finishAd() {
+  adBusy = false;
+
+  await Promise.allSettled([
+    refreshState(),
+    loadAdStatus(),
+    loadMyRank()
+  ]);
+
+  if (adCountKnown && adCount >= DAILY_AD_LIMIT) {
+    setAdButtonsDisabled(true);
+  } else {
+    setAdButtonsDisabled(false);
+  }
+}
+
+/* =========================
+   SDK LOADER
+========================= */
+
+function loadSDK(url, globalName) {
+  if (window[globalName]) {
+    return Promise.resolve(window[globalName]);
+  }
 
   if (window[globalName + "Loading"]) {
     return window[globalName + "Loading"];
@@ -474,9 +739,9 @@ async function loadSDK(url, globalName) {
       }
     };
 
-    script.onerror = () => reject(
-      new Error("Could not load " + globalName + " SDK.")
-    );
+    script.onerror = () => {
+      reject(new Error("Could not load " + globalName + " SDK."));
+    };
 
     document.head.appendChild(script);
   });
@@ -484,39 +749,16 @@ async function loadSDK(url, globalName) {
   return window[globalName + "Loading"];
 }
 
-async function beginAd() {
-  if (adBusy) throw new Error("An advertisement is already running.");
-
-  const status = await loadAdStatus();
-
-  if (status && getAdCount(status) >= DAILY_AD_LIMIT) {
-    throw new Error("You have reached today's 50-ad limit.");
-  }
-
-  adBusy = true;
-  setAdButtonsDisabled(true);
-
-  return adCount;
-}
-
-async function finishAd() {
-  adBusy = false;
-  setAdButtonsDisabled(false);
-
-  await Promise.all([
-    refreshState(),
-    loadAdStatus(),
-    loadMyRank()
-  ]);
-}
-
 /* =========================
    ADSGRAM
 ========================= */
 
 async function watchAdsGram() {
+  let started = false;
+
   try {
     await beginAd();
+    started = true;
 
     setAdMessage("Preparing AdsGram advertisement...");
 
@@ -525,25 +767,27 @@ async function watchAdsGram() {
       "Adsgram"
     );
 
+    const controller = sdk.init({
+      blockId: ADSGRAM_BLOCK_ID
+    });
+
     const start = await api("/ad-start", "POST");
 
     const sessionId =
-      start.session_id ??
-      start.sessionId ??
+      start.session_id ||
+      start.sessionId ||
       start.id;
 
     if (!sessionId) {
       throw new Error("The server did not create an ad session.");
     }
 
-    const controller = sdk.init({
-      blockId: ADSGRAM_BLOCK_ID
-    });
+    setAdMessage("Advertisement is loading...");
 
     const result = await controller.show();
 
     if (!result || result.done !== true) {
-      setAdMessage("Advertisement was not completed. No points awarded.");
+      setAdMessage("Ad was not completed. No points awarded.");
       toast("Ad not completed. No reward.");
       return;
     }
@@ -570,7 +814,9 @@ async function watchAdsGram() {
     setAdMessage(error.message || "AdsGram unavailable.");
 
   } finally {
-    await finishAd().catch(() => {});
+    if (started) {
+      await finishAd();
+    }
   }
 }
 
@@ -579,10 +825,12 @@ async function watchAdsGram() {
 ========================= */
 
 async function watchAdsun() {
-  let startingCount = adCount;
+  let started = false;
+  let startingCount = 0;
 
   try {
     startingCount = await beginAd();
+    started = true;
 
     setAdMessage("Preparing Adsun advertisement...");
 
@@ -602,7 +850,6 @@ async function watchAdsun() {
     );
 
     /*
-      IMPORTANT:
       Adsun rewards are credited by the server callback.
       A successful SDK promise alone does NOT award points.
     */
@@ -638,7 +885,9 @@ async function watchAdsun() {
     setAdMessage(error.message || "Adsun unavailable.");
 
   } finally {
-    await finishAd().catch(() => {});
+    if (started) {
+      await finishAd();
+    }
   }
 }
 
@@ -785,12 +1034,13 @@ function showPage(page) {
 
 function addPersonalRank() {
   const card = document.querySelector("#leaderboard .card");
+
   if (!card || document.getElementById("myRank")) return;
 
   const rankBox = document.createElement("div");
 
   rankBox.style.cssText =
-    "margin-top:14px;padding:14px;background:#202541;border-radius:14px;display:flex;justify-content:space-between;align-items:center";
+    "margin-top:14px;padding:14px;background:#251d3e;border-radius:14px;display:flex;justify-content:space-between;align-items:center";
 
   rankBox.innerHTML = `
     <strong>Your current rank</strong>
@@ -813,11 +1063,11 @@ async function startApp() {
       tg.expand();
 
       if (tg.setHeaderColor) {
-        tg.setHeaderColor("#0b0c19");
+        tg.setHeaderColor("#100d20");
       }
 
       if (tg.setBackgroundColor) {
-        tg.setBackgroundColor("#0b0c19");
+        tg.setBackgroundColor("#100d20");
       }
     }
 
@@ -855,3 +1105,5 @@ async function startApp() {
 
 startApp();
 </script>
+</body>
+</html>

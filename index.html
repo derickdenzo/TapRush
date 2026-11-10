@@ -219,7 +219,6 @@ const API = "https://taprush-api.derickainamani.workers.dev";
 const BOT_USERNAME = "TapRushGobalBot";
 
 const ADSGRAM_BLOCK_ID = "58504";
-const ADSUN_BLOCK_ID = "50163";
 
 const AD_REWARD = 100;
 const DAILY_AD_LIMIT = 50;
@@ -522,70 +521,14 @@ document.getElementById("taskDaily")
 ========================= */
 
 function createAdInterface() {
-  const card = document.getElementById("rewardedAdTask");
+  const card = document.getElementById('rewardedAdTask');
   if (!card) return;
-
-  card.innerHTML = `
-    <div class="row">
-      <div class="ad-icon">▶️</div>
-      <span class="pill">OPTIONAL REWARDS</span>
-    </div>
-
-    <h3 style="margin:14px 0 6px">Watch an advertisement</h3>
-
-    <p class="notice">
-      Earn ${AD_REWARD} TapRush points for each successfully
-      completed rewarded advertisement. Watching ads is optional.
-    </p>
-
-    <div class="token-grid">
-      <div class="token-box">
-        <span>REWARD PER AD</span>
-        <strong>+${number(AD_REWARD)}</strong>
-      </div>
-      <div class="token-box">
-        <span>ADS WATCHED TODAY</span>
-        <strong id="adsToday">0 / ${DAILY_AD_LIMIT}</strong>
-      </div>
-    </div>
-
-    <div class="bar">
-      <div id="adsProgress" style="width:0%"></div>
-    </div>
-
-    <p class="notice" id="adMessage">
-      Choose an advertisement network below.
-    </p>
-
-    <button class="action full" id="adsgramButton">
-      ▶ Watch with AdsGram
-    </button>
-
-    <button class="action secondary full"
-      id="adsunButton" style="margin-top:10px">
-      ▶ Watch with Adsun
-    </button>
-
-    <button class="action secondary full"
-      id="refreshAdsButton" style="margin-top:10px">
-      Refresh ad progress
-    </button>
-
-    <p class="notice">
-      Maximum ${DAILY_AD_LIMIT} rewarded advertisements per day
-      across both networks combined. Incomplete advertisements
-      earn no points.
-    </p>
-  `;
-
-  document.getElementById("adsgramButton")
-    .addEventListener("click", watchAdsGram);
-
-  document.getElementById("adsunButton")
-    .addEventListener("click", watchAdsun);
-
-  document.getElementById("refreshAdsButton")
-    .addEventListener("click", loadAdStatus);
+  card.innerHTML = '<div class="row"><div class="ad-icon">▶️</div><span class="pill">OPTIONAL REWARDS</span></div>' +
+    '<h3 style="margin:14px 0 6px">Earn points</h3>' +
+    '<p class="notice">Watch a short advertisement and claim ' + AD_REWARD + ' TapRush points. Watching ads is optional.</p>' +
+    '<button class="action full" id="adsgramButton">▶ Watch &amp; Claim +100</button>' +
+    '<p class="notice" id="adMessage">Complete an advertisement to claim your reward.</p>';
+  document.getElementById('adsgramButton').addEventListener('click', watchAdsGram);
 }
 
 function setAdMessage(message) {
@@ -607,30 +550,13 @@ function getAdCount(result) {
 function updateAdDisplay(result) {
   adCount = getAdCount(result);
   adCountKnown = true;
-
-  const remaining = Math.max(0, DAILY_AD_LIMIT - adCount);
-  const countEl = document.getElementById("adsToday");
-  const bar = document.getElementById("adsProgress");
-
-  if (countEl) {
-    countEl.textContent = `${adCount} / ${DAILY_AD_LIMIT}`;
-  }
-
-  if (bar) {
-    bar.style.width =
-      Math.min(100, adCount / DAILY_AD_LIMIT * 100) + "%";
-  }
-
-  const exhausted = remaining <= 0;
-
-  const a = document.getElementById("adsgramButton");
-  const b = document.getElementById("adsunButton");
-
-  if (a) a.disabled = exhausted || adBusy;
-  if (b) b.disabled = exhausted || adBusy;
-
+  const exhausted = adCount >= DAILY_AD_LIMIT;
+  const button = document.getElementById('adsgramButton');
+  if (button) button.disabled = exhausted || adBusy;
   if (exhausted) {
-    setAdMessage("You have reached today's 50-ad limit. Come back tomorrow.");
+    setAdMessage('Daily rewarded-ad limit reached. Come back tomorrow.');
+  } else if (!adBusy) {
+    setAdMessage('Complete an advertisement to claim your reward.');
   }
 }
 
@@ -669,10 +595,8 @@ async function loadMyRank() {
 }
 
 function setAdButtonsDisabled(disabled) {
-  ["adsgramButton", "adsunButton"].forEach(id => {
-    const button = document.getElementById(id);
-    if (button) button.disabled = disabled;
-  });
+  const button = document.getElementById('adsgramButton');
+  if (button) button.disabled = disabled;
 }
 
 async function beginAd() {
@@ -687,7 +611,7 @@ async function beginAd() {
   }
 
   if (getAdCount(status) >= DAILY_AD_LIMIT) {
-    throw new Error("You have reached today's 50-ad limit.");
+    throw new Error("Daily rewarded-ad limit reached.");
   }
 
   adBusy = true;
@@ -812,77 +736,6 @@ async function watchAdsGram() {
     console.log("AdsGram:", error);
     toast(error.message || "AdsGram could not complete.");
     setAdMessage(error.message || "AdsGram unavailable.");
-
-  } finally {
-    if (started) {
-      await finishAd();
-    }
-  }
-}
-
-/* =========================
-   ADSUN
-========================= */
-
-async function watchAdsun() {
-  let started = false;
-  let startingCount = 0;
-
-  try {
-    startingCount = await beginAd();
-    started = true;
-
-    setAdMessage("Preparing Adsun advertisement...");
-
-    const sdk = await loadSDK(
-      "https://api.adsun.io/sdk.js",
-      "Adsun"
-    );
-
-    const controller = sdk.init({
-      blockId: ADSUN_BLOCK_ID
-    });
-
-    await controller.show();
-
-    setAdMessage(
-      "Advertisement finished. Waiting for Adsun's server to verify your reward..."
-    );
-
-    /*
-      Adsun rewards are credited by the server callback.
-      A successful SDK promise alone does NOT award points.
-    */
-
-    let credited = false;
-
-    for (let i = 0; i < 20; i++) {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      const status = await loadAdStatus();
-
-      if (status && getAdCount(status) > startingCount) {
-        credited = true;
-        break;
-      }
-    }
-
-    await refreshState();
-
-    if (credited) {
-      toast("Adsun reward confirmed: +100 points!");
-      setAdMessage("Your Adsun reward has been confirmed.");
-    } else {
-      toast("Ad finished. Reward verification is still pending.");
-      setAdMessage(
-        "Ad finished. The server has not confirmed the reward yet. Refresh your progress shortly."
-      );
-    }
-
-  } catch (error) {
-    console.log("Adsun:", error);
-    toast(error.message || "Adsun could not complete.");
-    setAdMessage(error.message || "Adsun unavailable.");
 
   } finally {
     if (started) {
